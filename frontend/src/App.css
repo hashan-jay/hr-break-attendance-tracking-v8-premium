@@ -8822,6 +8822,27 @@ html[data-theme="dark"] .tz-switch__button:focus-visible {
   left: 0;
 }
 
+@media (max-width: 720px) {
+  .portal-employee-header .tz-switch,
+  .portal-mobile-bar .tz-switch {
+    position: static;
+  }
+
+  .portal-mobile-bar {
+    position: relative;
+  }
+
+  .portal-employee-header .tz-switch__menu,
+  .portal-mobile-bar .tz-switch__menu {
+    position: absolute;
+    top: calc(100% + 0.35rem);
+    left: 0.65rem;
+    right: 0.65rem;
+    width: auto;
+    max-width: none;
+  }
+}
+
 .tz-switch__note {
   margin: 0;
   padding: 0.45rem 0.6rem 0.55rem;
