@@ -8824,7 +8824,9 @@ html[data-theme="dark"] .tz-switch__button:focus-visible {
 
 @media (max-width: 720px) {
   .portal-employee-header .tz-switch,
-  .portal-mobile-bar .tz-switch {
+  .portal-mobile-bar .tz-switch,
+  .portal-employee-header .portal-weather-picker,
+  .portal-mobile-bar .portal-weather-picker {
     position: static;
   }
 
@@ -8833,12 +8835,15 @@ html[data-theme="dark"] .tz-switch__button:focus-visible {
   }
 
   .portal-employee-header .tz-switch__menu,
-  .portal-mobile-bar .tz-switch__menu {
+  .portal-mobile-bar .tz-switch__menu,
+  .portal-employee-header .portal-weather-picker__menu,
+  .portal-mobile-bar .portal-weather-picker__menu {
     position: absolute;
     top: calc(100% + 0.35rem);
     left: 0.65rem;
     right: 0.65rem;
     width: auto;
+    min-width: 0;
     max-width: none;
   }
 }
@@ -11222,7 +11227,7 @@ html[data-theme="dark"] .attendance-analytics .analytics-dept {
 
   .portal-shell .portal-weather-picker {
     display: block;
-    position: relative;
+    position: static;
     flex: 0 0 auto;
   }
 
