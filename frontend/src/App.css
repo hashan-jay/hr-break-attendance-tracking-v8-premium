@@ -1112,9 +1112,9 @@ html[data-theme="dark"] .portal-shell .portal-weather-picker__button {
 html[data-theme="dark"] .portal-shell .portal-weather-picker__button:hover,
 html[data-theme="dark"] .portal-shell .portal-weather-picker__button:focus-visible {
   background: #5ec4f0;
-  border-color: #b9e6fb;
+  border-color: #5ec4f0;
   color: #fff;
-  box-shadow: 0 0 10px 3px rgba(94, 196, 240, 0.32);
+  box-shadow: 0 0 12px 4px rgba(125, 211, 245, 0.34);
 }
 
 .portal-shell .portal-clock {
@@ -8796,9 +8796,9 @@ html[data-theme="dark"] .tz-switch__button {
 html[data-theme="dark"] .tz-switch__button:hover,
 html[data-theme="dark"] .tz-switch__button:focus-visible {
   background: #14542d;
-  border-color: #8fd0a8;
+  border-color: #14542d;
   color: #fff;
-  box-shadow: 0 0 10px 3px rgba(143, 208, 168, 0.28);
+  box-shadow: 0 0 12px 4px rgba(134, 214, 160, 0.32);
 }
 
 .tz-switch__menu {
@@ -8932,10 +8932,10 @@ html[data-theme="dark"] .tz-switch__option:hover {
 .theme-toggle.theme-toggle--circle.is-dark:hover,
 .theme-toggle.theme-toggle--circle.is-dark:focus-visible {
   background: #161b22;
-  border-color: #3a4458;
+  border-color: #161b22;
   color: #fff;
   transform: none;
-  box-shadow: 0 0 10px 3px rgba(186, 210, 255, 0.24);
+  box-shadow: 0 0 12px 4px rgba(255, 255, 255, 0.16);
 }
 
 .portal-shell .theme-toggle:hover {
@@ -8952,10 +8952,10 @@ html[data-theme="dark"] .tz-switch__option:hover {
 
 html[data-theme="dark"] .portal-shell .theme-toggle.theme-toggle--circle:hover,
 html[data-theme="dark"] .portal-shell .theme-toggle.theme-toggle--circle:focus-visible {
-  border-color: #3a4458;
+  border-color: #161b22;
   background: #161b22;
   color: #fff;
-  box-shadow: 0 0 10px 3px rgba(186, 210, 255, 0.24);
+  box-shadow: 0 0 12px 4px rgba(255, 255, 255, 0.16);
 }
 
 .portal-shell .theme-toggle:focus-visible {
@@ -9792,7 +9792,7 @@ html[data-theme="dark"] .portal-shell .portal-employee-header__actions .portal-h
   color: #fff;
   border-color: #14542d;
   transform: none;
-  box-shadow: 0 0 10px 3px rgba(94, 196, 140, 0.28);
+  box-shadow: 0 0 12px 4px rgba(134, 214, 160, 0.32);
 }
 
 html[data-theme="dark"] .portal-shell .portal-clock__time {
@@ -11185,9 +11185,9 @@ html[data-theme="dark"] .attendance-analytics .analytics-dept {
   html[data-theme="dark"] .portal-shell .portal-weather-picker__button:hover,
   html[data-theme="dark"] .portal-shell .portal-weather-picker__button:focus-visible {
     background: #5ec4f0;
-    border-color: #b9e6fb;
+    border-color: #5ec4f0;
     color: #fff;
-    box-shadow: 0 0 10px 3px rgba(94, 196, 240, 0.32);
+    box-shadow: 0 0 12px 4px rgba(125, 211, 245, 0.34);
   }
 
   .portal-shell .portal-employee-filters {
