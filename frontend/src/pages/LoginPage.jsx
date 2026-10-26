@@ -5,6 +5,7 @@ import { apiErrorMessage } from '../api/client';
 import { useFeedback } from '../feedback/FeedbackContext';
 import PortalCredits from '../components/PortalCredits';
 import ThemeToggle from '../components/ThemeToggle';
+import TimeZoneButton from '../components/TimeZoneButton';
 
 export default function LoginPage() {
   const { login, isAuthenticated, loading } = useAuth();
@@ -33,6 +34,7 @@ export default function LoginPage() {
   return (
     <div className="app-portal login-screen login-screen--ig">
       <div className="login-theme-toggle">
+        <TimeZoneButton />
         <ThemeToggle variant="circle" />
       </div>
       <div className="login-ig">

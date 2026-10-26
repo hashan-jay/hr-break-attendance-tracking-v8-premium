@@ -1,6 +1,7 @@
 /**
  * Self-contained A4 HTML used by Save HTML and Print A4 Report.
  */
+import { formatGeneratedAt as formatViewGeneratedAt } from './timeZones';
 function escapeAttr(value) {
   return String(value ?? '')
     .replaceAll('&', '&amp;')
@@ -103,13 +104,5 @@ export function printHtmlReport(title, bodyHtml) {
 }
 
 export function formatGeneratedAt(date = new Date()) {
-  return date.toLocaleString(undefined, {
-    year: 'numeric',
-    month: 'short',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: false,
-  });
+  return formatViewGeneratedAt(date);
 }

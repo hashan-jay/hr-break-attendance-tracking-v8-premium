@@ -9,10 +9,11 @@ import StaffMenuSelect from '../components/StaffMenuSelect';
 import { useFeedback } from '../feedback/FeedbackContext';
 import { downloadHtmlReport, formatGeneratedAt, printHtmlReport } from '../lib/downloadReport';
 import { useTheme } from '../theme/ThemeContext';
+import { useViewTimeZone } from '../theme/TimeZoneContext';
+import { colomboMonthValue, formatCivilDate, formatWhen, getViewTimeZoneInfo } from '../lib/timeZones';
 
 function currentMonthValue() {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+  return colomboMonthValue();
 }
 
 function entityId(item) {
@@ -28,17 +29,7 @@ function formatRate(value) {
 }
 
 function formatDay(value) {
-  if (!value) return '—';
-  const d = new Date(`${String(value).slice(0, 10)}T00:00:00`);
-  if (Number.isNaN(d.getTime())) return String(value);
-  return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
-}
-
-function formatWhen(value) {
-  if (!value) return '—';
-  const parsed = new Date(value);
-  if (Number.isNaN(parsed.getTime())) return String(value).replace('T', ' ');
-  return parsed.toLocaleString();
+  return formatCivilDate(value);
 }
 
 function csvCell(value) {
@@ -84,7 +75,7 @@ function peopleReportHtml(report, rows, { view, query, shiftLabel, departmentLab
   return `
     <h1>HR Break Time Tracking</h1>
     <h2>Attendance analytics — People</h2>
-    <p>Generated ${escapeHtml(generatedAt)} (PC local time)</p>
+    <p>Generated ${escapeHtml(generatedAt)} (${escapeHtml(getViewTimeZoneInfo().city)})</p>
     <div class="meta">
       <div><span>Month</span><strong>${escapeHtml(report.monthLabel)}</strong></div>
       <div><span>Shift</span><strong>${escapeHtml(shiftLabel)}</strong></div>
@@ -176,6 +167,7 @@ export default function AttendanceAnalyticsPage() {
   const { toast } = useFeedback();
   const { isDeveloper } = useAuth();
   const { isDark } = useTheme();
+  useViewTimeZone();
   const [month, setMonth] = useState(currentMonthValue);
   const [shiftId, setShiftId] = useState('');
   const [departmentId, setDepartmentId] = useState('');

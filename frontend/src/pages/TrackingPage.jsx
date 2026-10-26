@@ -3,6 +3,8 @@ import api, { apiErrorMessage } from '../api/client';
 import { useLiveUpdates } from '../api/liveUpdates';
 import { LoadingBlock, StatusBadge } from '../components/UiBits';
 import { useFeedback } from '../feedback/FeedbackContext';
+import { useViewTimeZone } from '../theme/TimeZoneContext';
+import { colomboTodayIso, formatBreakStamp, formatCivilDate } from '../lib/timeZones';
 import {
   BREAK_TYPES,
   canSelectForCapture,
@@ -10,7 +12,6 @@ import {
   formatElapsed,
   formatLocalClock,
   liveElapsedSeconds,
-  parseLocalDateTime,
   isOffShift,
   offShiftReason,
   remainingStarts,
@@ -101,30 +102,11 @@ function trackingButtonState(employee, breakType) {
 }
 
 function formatCalendarDay(value) {
-  if (!value) return '—';
-  const parsed = new Date(`${String(value).slice(0, 10)}T00:00:00`);
-  if (Number.isNaN(parsed.getTime())) return String(value);
-  return parsed.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+  return formatCivilDate(value, { month: 'short', day: 'numeric', year: 'numeric' });
 }
 
 function todayInputValue() {
-  const now = new Date();
-  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
-}
-
-function formatBreakStamp(value) {
-  const d = parseLocalDateTime(value);
-  if (!d) return '—';
-  const time = d.toLocaleTimeString(undefined, {
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: false,
-  });
-  const today = new Date();
-  if (d.toDateString() === today.toDateString()) return time;
-  const date = d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
-  return `${date} ${time}`;
+  return colomboTodayIso();
 }
 
 function takenDurationSeconds(session, nowMs) {
@@ -752,6 +734,7 @@ function ExceededShiftBoard({
 
 export default function TrackingPage() {
   const { toast } = useFeedback();
+  useViewTimeZone();
   const [board, setBoard] = useState(null);
   const [departments, setDepartments] = useState([]);
   const [shifts, setShifts] = useState([]);

@@ -1,16 +1,10 @@
 import { formatGeneratedAt } from '../lib/downloadReport';
+import { formatWhen, getViewTimeZoneInfo } from '../lib/timeZones';
 
 function statusClass(color) {
   if (color === 'green') return 'status-green';
   if (color === 'red') return 'status-red';
   return '';
-}
-
-function formatWhen(value) {
-  if (!value) return '—';
-  const parsed = new Date(value);
-  if (Number.isNaN(parsed.getTime())) return String(value).replace('T', ' ');
-  return parsed.toLocaleString();
 }
 
 export function absentNote(report) {
@@ -97,7 +91,7 @@ export function renderAttendanceReportHtml(report, filters, options = {}) {
   return `
     <h1>HR Break Time Tracking</h1>
     <h2>Attendance</h2>
-    <p>Generated ${escapeHtml(generatedAt)} (PC local time)</p>
+    <p>Generated ${escapeHtml(generatedAt)} (${escapeHtml(getViewTimeZoneInfo().city)})</p>
     <div class="meta">
       <div><span>Shift start from</span><strong>${escapeHtml(report.from)}</strong></div>
       <div><span>Shift start to</span><strong>${escapeHtml(report.to)}</strong></div>

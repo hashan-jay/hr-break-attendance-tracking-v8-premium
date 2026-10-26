@@ -8,6 +8,7 @@ import PortalClock from '../components/PortalClock';
 import PortalCredits from '../components/PortalCredits';
 import PasscodeModal from '../components/PasscodeModal';
 import ThemeToggle from '../components/ThemeToggle';
+import TimeZoneButton from '../components/TimeZoneButton';
 import { StatusBadge } from '../components/UiBits';
 import { useFeedback } from '../feedback/FeedbackContext';
 import {
@@ -666,6 +667,7 @@ export default function PortalPage() {
                 disabled={apiOnline === false}
                 onSelect={selectPortalWeather}
               />
+              <TimeZoneButton />
               <ThemeToggle variant="circle" />
             {isAuthenticated ? (
               <button

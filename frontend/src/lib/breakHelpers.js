@@ -1,5 +1,7 @@
 /** Shared break-time helpers for Meal + Comfort boards. */
 
+import { formatClock, parseWallTime } from './timeZones';
+
 export const BREAK_TYPES = {
   MEAL: 'Meal',
   COMFORT: 'Comfort',
@@ -35,23 +37,13 @@ export function adjustTimeBounds(rawTotalSeconds) {
 }
 
 export function parseLocalDateTime(value) {
-  if (!value) return null;
-  if (value instanceof Date) return value;
-  const text = String(value).trim();
-  const normalized = text.includes('T') ? text : text.replace(' ', 'T');
-  const d = new Date(normalized);
-  return Number.isNaN(d.getTime()) ? null : d;
+  return parseWallTime(value);
 }
 
 export function formatLocalClock(value) {
   const d = parseLocalDateTime(value);
   if (!d) return '—';
-  return d.toLocaleTimeString(undefined, {
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: false,
-  });
+  return formatClock(d, true);
 }
 
 export function liveElapsedSeconds(outTime, nowMs, periodEnd) {

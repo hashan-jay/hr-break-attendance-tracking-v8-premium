@@ -5,14 +5,10 @@ import { useLiveUpdates } from '../api/liveUpdates';
 import { StatusBadge } from '../components/UiBits';
 import StaffMenuSelect from '../components/StaffMenuSelect';
 import { useFeedback } from '../feedback/FeedbackContext';
+import { useViewTimeZone } from '../theme/TimeZoneContext';
+import { colomboTodayIso, formatClock, formatWhen } from '../lib/timeZones';
 
-const todayIso = () => {
-  const d = new Date();
-  const yyyy = d.getFullYear();
-  const mm = String(d.getMonth() + 1).padStart(2, '0');
-  const dd = String(d.getDate()).padStart(2, '0');
-  return `${yyyy}-${mm}-${dd}`;
-};
+const todayIso = () => colomboTodayIso();
 
 function entityId(item) {
   const value = item?.id ?? item?.Id;
@@ -20,25 +16,13 @@ function entityId(item) {
   return Number.isInteger(n) && n > 0 ? String(n) : '';
 }
 
-function formatWhen(value) {
-  if (!value) return '—';
-  const parsed = new Date(value);
-  if (Number.isNaN(parsed.getTime())) return String(value).replace('T', ' ');
-  return parsed.toLocaleString();
-}
-
-function formatClock(value) {
-  if (!value) return '';
-  const parsed = new Date(value);
-  if (Number.isNaN(parsed.getTime())) {
-    const text = String(value);
-    return text.length >= 16 ? text.slice(11, 16) : text;
-  }
-  return parsed.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+function formatClockValue(value) {
+  return formatClock(value);
 }
 
 export default function AttendancePage() {
   const { toast } = useFeedback();
+  useViewTimeZone();
   const [date, setDate] = useState(todayIso());
   const [shiftId, setShiftId] = useState('');
   const [shifts, setShifts] = useState([]);
@@ -83,7 +67,7 @@ export default function AttendancePage() {
 
   const present = roster?.present || [];
   const absent = roster?.absent || [];
-  const revealLabel = formatClock(roster?.absentRevealAt);
+  const revealLabel = formatClockValue(roster?.absentRevealAt);
 
   return (
     <div className="page staff-console-page attendance-page">

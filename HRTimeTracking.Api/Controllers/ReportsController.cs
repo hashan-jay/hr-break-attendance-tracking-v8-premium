@@ -39,7 +39,7 @@ public class ReportsController : ControllerBase
         [FromQuery] string? employeeId = null,
         [FromQuery] string? shiftId = null)
     {
-        var start = ParseDate(fromDate) ?? ParseDate(from) ?? DateOnly.FromDateTime(DateTime.Now);
+        var start = ParseDate(fromDate) ?? ParseDate(from) ?? TimeDisplay.TodayLocal();
         var end = ParseDate(toDate) ?? ParseDate(to) ?? start;
         var report = await _reportService.GetReportAsync(
             start, end, ParseId(departmentId), ParseId(employeeId), ParseId(shiftId));
@@ -58,7 +58,7 @@ public class ReportsController : ControllerBase
         [FromQuery] string? employeeId = null,
         [FromQuery] string? shiftId = null)
     {
-        var start = ParseDate(fromDate) ?? ParseDate(from) ?? DateOnly.FromDateTime(DateTime.Now);
+        var start = ParseDate(fromDate) ?? ParseDate(from) ?? TimeDisplay.TodayLocal();
         var end = ParseDate(toDate) ?? ParseDate(to) ?? start;
         var report = await _reportService.GetReportAsync(
             start, end, ParseId(departmentId), ParseId(employeeId), ParseId(shiftId));

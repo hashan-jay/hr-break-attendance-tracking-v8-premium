@@ -6,6 +6,7 @@ import PortalClock from './PortalClock';
 import PortalCredits from './PortalCredits';
 import { portalTitle, roleLabel } from '../lib/roles';
 import ThemeToggle from './ThemeToggle';
+import TimeZoneButton from './TimeZoneButton';
 
 function Icon({ children }) {
   return (
@@ -164,6 +165,7 @@ function StaffSidebar({ user, items, onLogout, onNavigate }) {
       <div className="portal-side__dock">
         <div className="portal-side__tools">
           <PortalClock />
+          <TimeZoneButton />
           <ThemeToggle variant="circle" />
         </div>
         <div className="portal-side__footer">
@@ -347,6 +349,7 @@ export default function AppLayout() {
             </svg>
           </button>
           <div className="portal-mobile-bar__title">{portalTitle(user?.roles)}</div>
+          <TimeZoneButton />
           <ThemeToggle variant="circle" />
         </header>
         <main className="main-panel">

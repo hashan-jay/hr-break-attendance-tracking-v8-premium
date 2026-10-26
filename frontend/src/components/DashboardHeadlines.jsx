@@ -1,6 +1,8 @@
 import { useMemo } from 'react';
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis } from 'recharts';
 import { useTheme } from '../theme/ThemeContext';
+import { useViewTimeZone } from '../theme/TimeZoneContext';
+import { formatCivilDate, formatMonthLabel } from '../lib/timeZones';
 import SectionTitle from './SectionTitle';
 
 function formatNumber(value) {
@@ -9,10 +11,7 @@ function formatNumber(value) {
 }
 
 function formatTrendDate(value) {
-  if (!value) return '';
-  const d = new Date(`${value}T00:00:00`);
-  if (Number.isNaN(d.getTime())) return String(value);
-  return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+  return formatCivilDate(value);
 }
 
 function HeadlinesTooltip({ active, payload }) {
@@ -29,6 +28,7 @@ function HeadlinesTooltip({ active, payload }) {
 
 export default function DashboardHeadlines({ data }) {
   const { isDark } = useTheme();
+  useViewTimeZone();
   const trend = useMemo(
     () => (data?.trend || []).map((point) => ({
       ...point,
@@ -37,7 +37,7 @@ export default function DashboardHeadlines({ data }) {
     [data?.trend],
   );
   const line = isDark ? '#e879f9' : '#7c3aed';
-  const monthLabel = new Date().toLocaleDateString(undefined, { month: 'long' });
+  const monthLabel = formatMonthLabel();
 
   return (
     <section aria-label="Break headlines">

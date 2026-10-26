@@ -1,4 +1,5 @@
 import { formatGeneratedAt } from '../lib/downloadReport';
+import { getViewTimeZoneInfo } from '../lib/timeZones';
 
 function statusClass(color) {
   if (color === 'green') return 'status-green';
@@ -27,7 +28,7 @@ export default function BreakReportDocument({ report, filters }) {
       <header className="break-report-document__header print-header">
         <h1>HR Break Time Tracking</h1>
         <h2>Employee Meal & Comfort Break Totals</h2>
-        <p>Generated {generatedAt} (PC local time)</p>
+        <p>Generated {generatedAt} ({getViewTimeZoneInfo().city})</p>
       </header>
 
       <section className="break-report-document__meta print-section">
@@ -155,7 +156,7 @@ export function renderBreakReportHtml(report, filters) {
   return `
     <h1>HR Break Time Tracking</h1>
     <h2>Employee Meal & Comfort Break Totals</h2>
-    <p>Generated ${escapeHtml(generatedAt)} (PC local time)</p>
+    <p>Generated ${escapeHtml(generatedAt)} (${escapeHtml(getViewTimeZoneInfo().city)})</p>
     <div class="meta">
       <div><span>Shift start from</span><strong>${report.from}</strong></div>
       <div><span>Shift start to</span><strong>${report.to}</strong></div>

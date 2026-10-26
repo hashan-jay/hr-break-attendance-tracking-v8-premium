@@ -10,6 +10,7 @@ import DashboardInsightPanels from '../components/DashboardInsightPanels';
 import DashboardWorkforceAnalytics from '../components/DashboardWorkforceAnalytics';
 import SectionTitle from '../components/SectionTitle';
 import { useFeedback } from '../feedback/FeedbackContext';
+import { useViewTimeZone } from '../theme/TimeZoneContext';
 import { roleGreeting } from '../lib/roles';
 
 function QuickLink({ title, description, to, cta, tone }) {
@@ -54,6 +55,7 @@ function welcomeCopy(auth) {
 export default function DashboardPage() {
   const auth = useAuth();
   const { toast } = useFeedback();
+  useViewTimeZone();
   const [data, setData] = useState(null);
   const [now, setNow] = useState(() => new Date());
   const copy = useMemo(

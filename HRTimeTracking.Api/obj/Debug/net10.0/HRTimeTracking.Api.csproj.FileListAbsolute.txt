@@ -1841,3 +1841,4 @@ D:\BPO-Projects\hr-break-attendance-tracker-v8\HRTimeTracking.Api\obj\Debug\net1
 D:\BPO-Projects\hr-break-attendance-tracker-v8\HRTimeTracking.Api\obj\Debug\net10.0\HRTimeTracking.Api.pdb
 D:\BPO-Projects\hr-break-attendance-tracker-v8\HRTimeTracking.Api\obj\Debug\net10.0\HRTimeTracking.Api.genruntimeconfig.cache
 D:\BPO-Projects\hr-break-attendance-tracker-v8\HRTimeTracking.Api\obj\Debug\net10.0\ref\HRTimeTracking.Api.dll
+D:\BPO-Projects\hr-break-attendance-tracker-v8\HRTimeTracking.Api\obj\Debug\net10.0\HRTimeTracking.Api.sourcelink.json

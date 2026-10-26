@@ -18,6 +18,7 @@ import AuditPage from './pages/AuditPage';
 import { LoadingBlock } from './components/UiBits';
 import { FeedbackProvider } from './feedback/FeedbackContext';
 import { ThemeProvider } from './theme/ThemeContext';
+import { TimeZoneProvider } from './theme/TimeZoneContext';
 import './App.css';
 
 function ProtectedRoute({ allow, allowSections }) {
@@ -86,11 +87,13 @@ function AppRoutes() {
 export default function App() {
   return (
     <ThemeProvider>
+      <TimeZoneProvider>
       <FeedbackProvider>
         <AuthProvider>
           <AppRoutes />
         </AuthProvider>
       </FeedbackProvider>
+      </TimeZoneProvider>
     </ThemeProvider>
   );
 }

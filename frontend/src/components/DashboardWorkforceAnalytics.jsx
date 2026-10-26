@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { Area, CartesianGrid, ComposedChart, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { useTheme } from '../theme/ThemeContext';
+import { formatCivilDate } from '../lib/timeZones';
 import SectionTitle from './SectionTitle';
 
 function formatNumber(value) {
@@ -15,10 +16,7 @@ function formatPercent(value) {
 }
 
 function formatTrendDate(value) {
-  if (!value) return '';
-  const d = new Date(`${value}T00:00:00`);
-  if (Number.isNaN(d.getTime())) return String(value);
-  return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+  return formatCivilDate(value);
 }
 
 function toneClass(tone) {

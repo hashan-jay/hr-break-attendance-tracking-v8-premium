@@ -4,38 +4,10 @@ import AuditDetails from '../components/AuditDetails';
 import { renderAuditReportHtml } from '../components/AuditReportDocument';
 import { downloadHtmlReport, printHtmlReport } from '../lib/downloadReport';
 import { useFeedback } from '../feedback/FeedbackContext';
+import { useViewTimeZone } from '../theme/TimeZoneContext';
+import { colomboTodayIso, formatWhen, formatWhenParts } from '../lib/timeZones';
 
-const todayIso = () => {
-  const d = new Date();
-  const yyyy = d.getFullYear();
-  const mm = String(d.getMonth() + 1).padStart(2, '0');
-  const dd = String(d.getDate()).padStart(2, '0');
-  return `${yyyy}-${mm}-${dd}`;
-};
-
-function parseLocalDateTime(value) {
-  if (!value) return null;
-  const text = String(value).trim();
-  // API sends PC-local wall-clock times without Z.
-  const normalized = text.includes('T') ? text : text.replace(' ', 'T');
-  const d = new Date(normalized);
-  return Number.isNaN(d.getTime()) ? null : d;
-}
-
-function formatWhen(value) {
-  const parts = formatWhenParts(value);
-  if (!parts) return '—';
-  return `${parts.date}, ${parts.time}`;
-}
-
-function formatWhenParts(value) {
-  const d = parseLocalDateTime(value);
-  if (!d) return null;
-  return {
-    date: d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: '2-digit' }),
-    time: d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }),
-  };
-}
+const todayIso = () => colomboTodayIso();
 
 const ENTITY_LABELS = {
   ShiftDepartmentBreakLimit: 'Shift limits',
@@ -82,6 +54,7 @@ function WhenCell({ value }) {
 
 export default function AuditPage() {
   const { toast } = useFeedback();
+  useViewTimeZone();
   const [from, setFrom] = useState(todayIso());
   const [to, setTo] = useState(todayIso());
   const [report, setReport] = useState(null);

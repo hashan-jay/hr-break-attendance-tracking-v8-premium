@@ -1,3 +1,5 @@
+import { ianaZone } from './timeZones';
+
 export function roleLabel(roles = []) {
   if (roles.includes('Developer')) return 'System Developer';
   if (roles.includes('SystemAdministration')) return 'System Administration';
@@ -15,7 +17,12 @@ export function portalTitle(roles = []) {
 }
 
 export function timeGreeting(date = new Date()) {
-  const hour = date.getHours();
+  const hourText = new Intl.DateTimeFormat('en-GB', {
+    timeZone: ianaZone(),
+    hour: '2-digit',
+    hourCycle: 'h23',
+  }).format(date);
+  const hour = Number(hourText);
   if (hour >= 5 && hour < 12) return 'Good Morning';
   if (hour >= 12 && hour < 17) return 'Good Afternoon';
   return 'Good Evening';

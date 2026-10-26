@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from 'react';
 import api from '../api/client';
 import { useAuth } from '../auth/AuthContext';
 import { useFeedback } from '../feedback/FeedbackContext';
+import { useViewTimeZone } from '../theme/TimeZoneContext';
+import { formatShiftClock } from '../lib/timeZones';
 
 const HALF_HOUR_OPTIONS = Array.from({ length: 48 }, (_, i) => {
   const hours = String(Math.floor(i / 2)).padStart(2, '0');
@@ -19,6 +21,7 @@ const emptyForm = {
 export default function ShiftsPage() {
   const { toast, confirm } = useFeedback();
   const { isDeveloper } = useAuth();
+  useViewTimeZone();
   const [items, setItems] = useState([]);
   const [form, setForm] = useState(emptyForm);
   const [editingId, setEditingId] = useState(null);
@@ -32,8 +35,8 @@ export default function ShiftsPage() {
   const previewLabel = useMemo(() => {
     if (!form.startTime || !form.endTime) return '';
     const overnight = form.endTime <= form.startTime;
-    const end = overnight ? `${form.endTime} (+1)` : form.endTime;
-    return `${form.name || 'Shift'} (${form.startTime} – ${end})`;
+    const end = overnight ? `${formatShiftClock(form.endTime, true)} (+1)` : formatShiftClock(form.endTime);
+    return `${form.name || 'Shift'} (${formatShiftClock(form.startTime)} – ${end})`;
   }, [form]);
 
   const load = async () => {
@@ -230,7 +233,7 @@ export default function ShiftsPage() {
               {visibleItems.map((s) => (
                 <tr key={s.id}>
                   <td data-label="Name"><strong className="users-table__name">{s.name}</strong></td>
-                  <td data-label="Hours"><span className="users-table__handle">{s.startTime} – {s.spansNextDay ? `${s.endTime} (+1)` : s.endTime}</span></td>
+                  <td data-label="Hours"><span className="users-table__handle">{formatShiftClock(s.startTime)} – {s.spansNextDay ? `${formatShiftClock(s.endTime, true)} (+1)` : formatShiftClock(s.endTime)}</span></td>
                   <td data-label="Overnight"><span className="users-table__role">{s.spansNextDay ? 'Overnight' : 'Same day'}</span></td>
                   <td data-label="Employees"><span className="users-table__handle">{s.employeeCount}</span></td>
                   <td data-label="Status">
@@ -278,7 +281,7 @@ export default function ShiftsPage() {
             onSubmit={onSubmit}
           >
             <h2 id="shift-editor-title">{editingId ? 'Update shift' : 'Create shift'}</h2>
-            <p>Times use 30-minute steps. An end time at or before the start time runs overnight.</p>
+            <p>Shown in the selected time zone. Saved shift hours stay on Colombo time (+05:30), in 30-minute steps.</p>
             <label>
               Shift name
               <input required autoFocus value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Night Shift" />
@@ -286,13 +289,13 @@ export default function ShiftsPage() {
             <label>
               Start time
               <select required value={form.startTime} onChange={(e) => setForm({ ...form, startTime: e.target.value })}>
-                {HALF_HOUR_OPTIONS.map((t) => <option key={`s-${t}`} value={t}>{t}</option>)}
+                {HALF_HOUR_OPTIONS.map((t) => <option key={`s-${t}`} value={t}>{formatShiftClock(t)}</option>)}
               </select>
             </label>
             <label>
               End time
               <select required value={form.endTime} onChange={(e) => setForm({ ...form, endTime: e.target.value })}>
-                {HALF_HOUR_OPTIONS.map((t) => <option key={`e-${t}`} value={t}>{t}</option>)}
+                {HALF_HOUR_OPTIONS.map((t) => <option key={`e-${t}`} value={t}>{formatShiftClock(t)}</option>)}
               </select>
             </label>
             {editingId && (

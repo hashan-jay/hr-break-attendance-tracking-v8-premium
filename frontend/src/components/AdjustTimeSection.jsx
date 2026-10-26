@@ -5,22 +5,17 @@ import { StatusBadge } from './UiBits';
 import StaffMenuSelect from './StaffMenuSelect';
 import { useFeedback } from '../feedback/FeedbackContext';
 
+import { colomboTodayIso } from '../lib/timeZones';
+
 function todayIso() {
-  const d = new Date();
-  const yyyy = d.getFullYear();
-  const mm = String(d.getMonth() + 1).padStart(2, '0');
-  const dd = String(d.getDate()).padStart(2, '0');
-  return `${yyyy}-${mm}-${dd}`;
+  return colomboTodayIso();
 }
 
 function addDaysIso(iso, days) {
   const [y, m, d] = iso.split('-').map(Number);
-  const date = new Date(y, m - 1, d);
-  date.setDate(date.getDate() + days);
-  const yyyy = date.getFullYear();
-  const mm = String(date.getMonth() + 1).padStart(2, '0');
-  const dd = String(date.getDate()).padStart(2, '0');
-  return `${yyyy}-${mm}-${dd}`;
+  const date = new Date(Date.UTC(y, m - 1, d));
+  date.setUTCDate(date.getUTCDate() + days);
+  return date.toISOString().slice(0, 10);
 }
 
 function matchesSearch(row, query) {

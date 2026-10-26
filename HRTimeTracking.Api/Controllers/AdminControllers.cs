@@ -227,12 +227,12 @@ public class AuditController : ControllerBase
         [FromQuery] string? from = null,
         [FromQuery] string? to = null)
     {
-        var fromDate = DateOnly.TryParse(from, out var f) ? f : DateOnly.FromDateTime(DateTime.Now);
+        var fromDate = DateOnly.TryParse(from, out var f) ? f : TimeDisplay.TodayLocal();
         var toDate = DateOnly.TryParse(to, out var t) ? t : fromDate;
         if (toDate < fromDate) (fromDate, toDate) = (toDate, fromDate);
 
-        var fromUtc = DateTime.SpecifyKind(fromDate.ToDateTime(TimeOnly.MinValue), DateTimeKind.Local).ToUniversalTime();
-        var toUtcExclusive = DateTime.SpecifyKind(toDate.AddDays(1).ToDateTime(TimeOnly.MinValue), DateTimeKind.Local).ToUniversalTime();
+        var fromUtc = TimeDisplay.ColomboDateStartUtc(fromDate);
+        var toUtcExclusive = TimeDisplay.ColomboDateStartUtc(toDate.AddDays(1));
 
         var logs = await _db.AuditLogs.AsNoTracking()
             .Where(a => a.CreatedAt >= fromUtc && a.CreatedAt < toUtcExclusive)
@@ -365,12 +365,12 @@ public class AuditController : ControllerBase
 
         var fromDate = DateOnly.TryParse(from, out var parsedFrom)
             ? parsedFrom
-            : DateOnly.FromDateTime(DateTime.Now);
+            : TimeDisplay.TodayLocal();
         var toDate = DateOnly.TryParse(to, out var parsedTo) ? parsedTo : fromDate;
         if (toDate < fromDate) (fromDate, toDate) = (toDate, fromDate);
 
-        fromUtc = DateTime.SpecifyKind(fromDate.ToDateTime(TimeOnly.MinValue), DateTimeKind.Local).ToUniversalTime();
-        toUtcExclusive = DateTime.SpecifyKind(toDate.AddDays(1).ToDateTime(TimeOnly.MinValue), DateTimeKind.Local).ToUniversalTime();
+        fromUtc = TimeDisplay.ColomboDateStartUtc(fromDate);
+        toUtcExclusive = TimeDisplay.ColomboDateStartUtc(toDate.AddDays(1));
         return true;
     }
 }

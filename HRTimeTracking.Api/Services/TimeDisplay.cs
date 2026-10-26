@@ -5,16 +5,53 @@ using System.Text.Json.Serialization;
 namespace HRTimeTracking.Api.Services;
 
 /// <summary>
-/// Break timing utilities. All operational times use the PC's local clock,
-/// and durations are measured in whole seconds.
+/// Break timing utilities. Operational timestamps are Colombo wall-clock times
+/// (UTC+05:30). Durations are measured in whole seconds. Stored rows are not rewritten.
 /// </summary>
 public static class TimeDisplay
 {
     public const string LocalDateTimeFormat = "yyyy-MM-dd'T'HH:mm:ss";
 
-    public static DateTime NowLocal() => DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Local);
+    private static readonly TimeZoneInfo Colombo = ResolveColombo();
+
+    private static TimeZoneInfo ResolveColombo()
+    {
+        foreach (var id in new[] { "Sri Lanka Standard Time", "Asia/Colombo" })
+        {
+            try
+            {
+                return TimeZoneInfo.FindSystemTimeZoneById(id);
+            }
+            catch (TimeZoneNotFoundException)
+            {
+            }
+            catch (InvalidTimeZoneException)
+            {
+            }
+        }
+
+        return TimeZoneInfo.CreateCustomTimeZone(
+            "Asia/Colombo",
+            TimeSpan.FromMinutes(330),
+            "Colombo",
+            "Colombo");
+    }
+
+    /// <summary>Current Colombo wall time. Kind is Unspecified so SQL stores these clock numbers.</summary>
+    public static DateTime NowLocal()
+    {
+        var wall = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, Colombo);
+        return DateTime.SpecifyKind(wall, DateTimeKind.Unspecified);
+    }
 
     public static DateOnly TodayLocal() => DateOnly.FromDateTime(NowLocal());
+
+    /// <summary>Colombo midnight converted to UTC. Used only to query UTC audit timestamps.</summary>
+    public static DateTime ColomboDateStartUtc(DateOnly date)
+    {
+        var wall = DateTime.SpecifyKind(date.ToDateTime(TimeOnly.MinValue), DateTimeKind.Unspecified);
+        return TimeZoneInfo.ConvertTimeToUtc(wall, Colombo);
+    }
 
     /// <summary>
     /// Treat Unspecified values from SQL as local wall-clock times.
@@ -22,9 +59,9 @@ public static class TimeDisplay
     /// </summary>
     public static DateTime AsLocal(DateTime value) => value.Kind switch
     {
-        DateTimeKind.Utc => value.ToLocalTime(),
+        DateTimeKind.Utc => DateTime.SpecifyKind(TimeZoneInfo.ConvertTimeFromUtc(value, Colombo), DateTimeKind.Unspecified),
         DateTimeKind.Local => value,
-        _ => DateTime.SpecifyKind(value, DateTimeKind.Local)
+        _ => DateTime.SpecifyKind(value, DateTimeKind.Unspecified)
     };
 
     public static DateTime? AsLocal(DateTime? value) => value.HasValue ? AsLocal(value.Value) : null;
@@ -38,10 +75,10 @@ public static class TimeDisplay
         var utc = value.Kind switch
         {
             DateTimeKind.Utc => value,
-            DateTimeKind.Local => value.ToUniversalTime(),
+            DateTimeKind.Local => TimeZoneInfo.ConvertTimeToUtc(DateTime.SpecifyKind(value, DateTimeKind.Unspecified), Colombo),
             _ => DateTime.SpecifyKind(value, DateTimeKind.Utc)
         };
-        return DateTime.SpecifyKind(utc.ToLocalTime(), DateTimeKind.Local);
+        return DateTime.SpecifyKind(TimeZoneInfo.ConvertTimeFromUtc(utc, Colombo), DateTimeKind.Unspecified);
     }
 
     /// <summary>

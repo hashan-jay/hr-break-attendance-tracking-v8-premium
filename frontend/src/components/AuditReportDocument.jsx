@@ -1,21 +1,5 @@
 import { formatGeneratedAt } from '../lib/downloadReport';
-
-function formatWhen(value) {
-  if (!value) return '—';
-  const text = String(value).trim();
-  const normalized = text.includes('T') ? text : text.replace(' ', 'T');
-  const d = new Date(normalized);
-  if (Number.isNaN(d.getTime())) return '—';
-  return d.toLocaleString(undefined, {
-    year: 'numeric',
-    month: 'short',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: false,
-  });
-}
+import { formatWhen, getViewTimeZoneInfo } from '../lib/timeZones';
 
 export default function AuditReportDocument({ report }) {
   if (!report) return null;
@@ -27,7 +11,7 @@ export default function AuditReportDocument({ report }) {
       <header className="break-report-document__header print-header">
         <h1>HR Break Time Tracking</h1>
         <h2>Audit Log Report</h2>
-        <p>Generated {generatedAt} (PC local time)</p>
+        <p>Generated {generatedAt} ({getViewTimeZoneInfo().city})</p>
       </header>
 
       <section className="break-report-document__meta print-section">
@@ -116,7 +100,7 @@ export default function AuditReportDocument({ report }) {
       </section>
 
       <footer className="break-report-document__footer">
-        Developer audit trail for HR Break Time Tracking. Times shown in PC local time.
+        Developer audit trail for HR Break Time Tracking. Times shown in {getViewTimeZoneInfo().city}.
       </footer>
     </div>
   );
@@ -144,7 +128,7 @@ export function renderAuditReportHtml(report) {
   return `
     <h1>HR Break Time Tracking</h1>
     <h2>Audit Log Report</h2>
-    <p>Generated ${escapeHtml(generatedAt)} (PC local time)</p>
+    <p>Generated ${escapeHtml(generatedAt)} (${escapeHtml(getViewTimeZoneInfo().city)})</p>
     <div class="meta">
       <div><span>Period from</span><strong>${escapeHtml(report.from)}</strong></div>
       <div><span>Period to</span><strong>${escapeHtml(report.to)}</strong></div>
@@ -171,7 +155,7 @@ export function renderAuditReportHtml(report) {
       </tbody>
     </table>
     <div class="footer">
-      Developer audit trail for HR Break Time Tracking. Times shown in PC local time.
+      Developer audit trail for HR Break Time Tracking. Times shown in ${escapeHtml(getViewTimeZoneInfo().city)}.
     </div>
   `;
 }

@@ -3,6 +3,8 @@ import api, { apiErrorMessage } from '../api/client';
 import { useLiveUpdates } from '../api/liveUpdates';
 import { useAuth } from '../auth/AuthContext';
 import { useFeedback } from '../feedback/FeedbackContext';
+import { useViewTimeZone } from '../theme/TimeZoneContext';
+import { formatWhen } from '../lib/timeZones';
 
 const emptyForm = {
   employeeCode: '',
@@ -24,12 +26,6 @@ function findLocalCodeOwner(employees, code, excludeId) {
   const key = normalizeCode(code);
   if (!key) return null;
   return employees.find((emp) => normalizeCode(emp.employeeCode) === key && emp.id !== excludeId) || null;
-}
-
-function formatWhen(value) {
-  if (!value) return '—';
-  const d = new Date(value);
-  return Number.isNaN(d.getTime()) ? '—' : d.toLocaleString();
 }
 
 function DepartmentFilter({ value, onChange, options }) {
@@ -190,6 +186,7 @@ function EmployeeTable({
 export default function EmployeesPage() {
   const { can, canDeactivateEmployees, canPurgeEmployees } = useAuth();
   const { toast, confirm } = useFeedback();
+  useViewTimeZone();
   const canEdit = can('employees');
   const canDeactivate = canDeactivateEmployees && canEdit;
   const canPurge = canPurgeEmployees && canEdit;

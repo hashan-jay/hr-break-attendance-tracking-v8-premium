@@ -6,14 +6,10 @@ import { renderBreakReportHtml } from '../components/BreakReportDocument';
 import { absentNote, splitAttendanceRows, renderAttendanceReportHtml } from '../components/AttendanceReportDocument';
 import { downloadHtmlReport, printHtmlReport } from '../lib/downloadReport';
 import { useFeedback } from '../feedback/FeedbackContext';
+import { useViewTimeZone } from '../theme/TimeZoneContext';
+import { colomboTodayIso, formatWhen } from '../lib/timeZones';
 
-const todayIso = () => {
-  const d = new Date();
-  const yyyy = d.getFullYear();
-  const mm = String(d.getMonth() + 1).padStart(2, '0');
-  const dd = String(d.getDate()).padStart(2, '0');
-  return `${yyyy}-${mm}-${dd}`;
-};
+const todayIso = () => colomboTodayIso();
 
 function entityId(item) {
   const value = item?.id ?? item?.Id ?? item?.employeeId ?? item?.departmentId;
@@ -24,13 +20,6 @@ function entityId(item) {
 function queryId(value) {
   const n = Number(value);
   return Number.isInteger(n) && n > 0 ? n : undefined;
-}
-
-function formatWhen(value) {
-  if (!value) return '—';
-  const parsed = new Date(value);
-  if (Number.isNaN(parsed.getTime())) return String(value).replace('T', ' ');
-  return parsed.toLocaleString();
 }
 
 function csvText(value) {
@@ -93,6 +82,7 @@ function AttendancePeopleTable({ title, rows, empty }) {
 
 export default function ReportsPage() {
   const { toast } = useFeedback();
+  useViewTimeZone();
   const [from, setFrom] = useState(todayIso());
   const [to, setTo] = useState(todayIso());
   const [departmentId, setDepartmentId] = useState('');
