@@ -11132,30 +11132,92 @@ html[data-theme="dark"] .attendance-analytics .analytics-dept {
   }
 
   .portal-shell .portal-employee-header {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    justify-items: stretch;
-    align-items: center;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    align-content: start;
+    justify-content: flex-start;
+    gap: 0.35rem;
     width: 100%;
+    height: auto;
+    min-height: 0;
     position: relative;
     z-index: 30;
+    padding: 0.85rem 0.9rem 0.75rem;
+    text-align: center;
   }
 
   .portal-shell .portal-employee-header__brand,
   .portal-shell .portal-employee-header__actions {
+    flex: 0 0 auto;
     width: 100%;
     max-width: 100%;
+    height: auto;
     min-width: 0;
     margin: 0;
   }
 
+  .portal-shell .portal-employee-header__brand {
+    align-items: center;
+    text-align: center;
+    gap: 0.28rem;
+  }
+
+  .portal-shell .portal-employee-title {
+    font-size: clamp(1.12rem, 5.2vw, 1.42rem);
+    line-height: 1.16;
+    letter-spacing: -0.03em;
+  }
+
+  .portal-shell .portal-employee-subtitle {
+    font-size: 0.8rem;
+    letter-spacing: 0.01em;
+  }
+
   .portal-shell .portal-employee-header__actions {
-    justify-content: space-between;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.4rem;
+    padding-top: 0.45rem;
+    border-top: 1px solid rgba(20, 84, 45, 0.12);
   }
 
   .portal-shell .portal-employee-header .portal-clock {
-    justify-content: flex-start;
-    max-width: calc(100% - 10.6rem);
+    justify-content: center;
+    flex-wrap: nowrap;
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    min-height: 0;
+    margin: 0;
+    gap: 0.45rem;
+  }
+
+  .portal-shell .portal-employee-header .portal-clock__time,
+  .portal-shell .portal-employee-header .portal-clock__date {
+    font-size: 1.12rem;
+  }
+
+  .portal-shell .portal-employee-header__tools {
+    width: 100%;
+    justify-content: center;
+    gap: 0.7rem;
+  }
+
+  .portal-shell .portal-employee-header__tools .portal-weather-picker__button,
+  .portal-shell .portal-employee-header__tools .tz-switch__button,
+  .portal-shell .portal-employee-header__tools .theme-toggle.theme-toggle--circle,
+  .portal-shell .portal-employee-header__tools .portal-header-login.btn-primary {
+    width: 2.7rem;
+    height: 2.7rem;
+    min-width: 2.7rem;
+    min-height: 2.7rem;
+  }
+
+  html[data-theme="dark"] .portal-shell .portal-employee-header__actions {
+    border-top-color: rgba(255, 255, 255, 0.1);
   }
 
   .portal-shell .portal-weather-picker {
