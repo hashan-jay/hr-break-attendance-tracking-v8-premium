@@ -1,0 +1,517 @@
+import { useEffect, useState } from 'react';
+import api from '../api/client';
+import { useAuth } from '../auth/AuthContext';
+import { useFeedback } from '../feedback/FeedbackContext';
+import { settingLabel } from '../lib/breakHelpers';
+import { PORTAL_WEATHER_KEY, PORTAL_WEATHER_OPTIONS } from '../lib/portalWeather';
+import AdjustTimeSection from '../components/AdjustTimeSection';
+
+const DURATION_KEYS = ['MealBreakLimitMinutes', 'ComfortBreakLimitMinutes'];
+const START_KEYS = ['MealBreakStartLimit', 'ComfortBreakStartLimit'];
+const HOLIDAY_LIMIT_KEY = 'MonthlyHolidayDayLimit';
+
+function SettingRow({ setting, min, max, onChange, onSave }) {
+  return (
+    <div className="setting-row">
+      <div>
+        <strong>{settingLabel(setting.key)}</strong>
+        <div className="muted">{setting.description || '—'}</div>
+        <div className="muted mono">{setting.key}</div>
+      </div>
+      <div className="setting-edit">
+        <input
+          type="number"
+          min={min}
+          max={max}
+          value={setting.value}
+          onChange={(e) => onChange(setting.id, e.target.value)}
+        />
+        <button type="button" className="btn btn-primary" onClick={() => onSave(setting.key, setting.value)}>
+          Save
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function rowKey(shiftId, departmentId) {
+  return `${shiftId}:${departmentId}`;
+}
+
+export default function SettingsPage() {
+  const { toast } = useFeedback();
+  const { isDeveloper } = useAuth();
+  const [settings, setSettings] = useState([]);
+  const [shiftGroups, setShiftGroups] = useState([]);
+  const [savingKey, setSavingKey] = useState(null);
+  const [savingShiftId, setSavingShiftId] = useState(null);
+  const [listView, setListView] = useState(() => {
+    const section = new URLSearchParams(window.location.search).get('section');
+    return section === 'holiday' && isDeveloper ? 'holiday' : 'shifts';
+  });
+
+  const load = async () => {
+    const [settingsRes, shiftRes] = await Promise.all([
+      api.get('/settings'),
+      api.get('/settings/shift-department-break-limits'),
+    ]);
+    setSettings(settingsRes.data);
+    setShiftGroups(shiftRes.data);
+  };
+
+  useEffect(() => {
+    load().catch((err) => {
+      toast.error(err.response?.data?.message || 'Failed to load settings.');
+    });
+  }, []);
+
+  const save = async (key, value) => {
+    try {
+      await api.put(`/settings/${encodeURIComponent(key)}`, { value });
+      toast.success('Setting saved.');
+      await load();
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Save failed.');
+    }
+  };
+
+  const updateLocal = (id, value) => {
+    setSettings((prev) => prev.map((x) => (x.id === id ? { ...x, value } : x)));
+  };
+
+  const updateShiftDeptLocal = (shiftId, departmentId, field, value) => {
+    setShiftGroups((prev) => prev.map((group) => {
+      if (group.shiftId !== shiftId) return group;
+      return {
+        ...group,
+        departments: group.departments.map((row) => (
+          row.departmentId === departmentId ? { ...row, [field]: value } : row
+        )),
+      };
+    }));
+  };
+
+  const saveShiftDept = async (row) => {
+    const key = rowKey(row.shiftId, row.departmentId);
+    setSavingKey(key);
+    try {
+      const { data } = await api.put(
+        `/settings/shift-department-break-limits/${row.shiftId}/${row.departmentId}`,
+        {
+          mealStartLimit: Number(row.mealStartLimit),
+          comfortStartLimit: Number(row.comfortStartLimit),
+          mealLimitMinutes: Number(row.mealLimitMinutes),
+          comfortLimitMinutes: Number(row.comfortLimitMinutes),
+        },
+      );
+      setShiftGroups((prev) => prev.map((group) => {
+        if (group.shiftId !== row.shiftId) return group;
+        return {
+          ...group,
+          departments: group.departments.map((item) => (
+            item.departmentId === row.departmentId ? data : item
+          )),
+        };
+      }));
+      toast.success(`Limits saved for ${data.departmentName} on ${data.shiftDisplay}.`);
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Could not save shift/department limits.');
+    } finally {
+      setSavingKey(null);
+    }
+  };
+
+  const saveShiftGroup = async (group) => {
+    const rowsToSave = (group.departments || []).filter((row) => !row.departmentIsDeleted);
+    if (!rowsToSave.length) return;
+    setSavingShiftId(group.shiftId);
+    try {
+      const updated = [];
+      for (const row of rowsToSave) {
+        const { data } = await api.put(
+          `/settings/shift-department-break-limits/${row.shiftId}/${row.departmentId}`,
+          {
+            mealStartLimit: Number(row.mealStartLimit),
+            comfortStartLimit: Number(row.comfortStartLimit),
+            mealLimitMinutes: Number(row.mealLimitMinutes),
+            comfortLimitMinutes: Number(row.comfortLimitMinutes),
+          },
+        );
+        updated.push(data);
+      }
+      setShiftGroups((prev) => prev.map((item) => {
+        if (item.shiftId !== group.shiftId) return item;
+        const savedByDepartment = new Map(updated.map((row) => [row.departmentId, row]));
+        return {
+          ...item,
+          departments: item.departments.map((row) => savedByDepartment.get(row.departmentId) || row),
+        };
+      }));
+      const skippedDeleted = (group.departments || []).some((row) => row.departmentIsDeleted);
+      toast.success(
+        skippedDeleted
+          ? `Limits saved for active departments on ${group.shiftDisplay}.`
+          : `Limits saved for all departments on ${group.shiftDisplay}.`,
+      );
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Could not save all limits for this shift.');
+      await load();
+    } finally {
+      setSavingShiftId(null);
+    }
+  };
+
+  const duration = settings.filter((s) => DURATION_KEYS.includes(s.key));
+  const starts = settings.filter((s) => START_KEYS.includes(s.key));
+  const otherAliasOrder = ['DailyBreakLimitMinutes', 'DailyMealBreakLimitMinutes'];
+  const weatherSetting = settings.find((s) => s.key === PORTAL_WEATHER_KEY);
+  const holidaySetting = settings.find((s) => s.key === HOLIDAY_LIMIT_KEY);
+  const other = settings
+    .filter((s) => !DURATION_KEYS.includes(s.key) && !START_KEYS.includes(s.key) && s.key !== PORTAL_WEATHER_KEY && s.key !== HOLIDAY_LIMIT_KEY)
+    .slice()
+    .sort((a, b) => {
+      const ai = otherAliasOrder.indexOf(a.key);
+      const bi = otherAliasOrder.indexOf(b.key);
+      if (ai === -1 && bi === -1) return 0;
+      if (ai === -1) return 1;
+      if (bi === -1) return -1;
+      return ai - bi;
+    });
+
+  return (
+    <div className="page staff-console-page settings-page">
+      <header className="page-header">
+        <div>
+          <h1>System Settings</h1>
+          <p>Configure Meal and Comfort break limits by shift and department.</p>
+        </div>
+        <div className="header-stat-tiles">
+          <div className="header-stat-tiles__row">
+            <article className="header-stat-tile">
+              <span>Shifts</span>
+              <strong>{shiftGroups.length}</strong>
+            </article>
+          </div>
+        </div>
+      </header>
+
+      <div className="list-switch" role="tablist" aria-label="Settings sections">
+        <button
+          type="button"
+          role="tab"
+          aria-selected={listView === 'shifts'}
+          className={`list-switch__btn${listView === 'shifts' ? ' is-active' : ''}`}
+          onClick={() => setListView('shifts')}
+        >
+          By shift
+          <span className="list-switch__count">{shiftGroups.length}</span>
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={listView === 'defaults'}
+          className={`list-switch__btn${listView === 'defaults' ? ' is-active' : ''}`}
+          onClick={() => setListView('defaults')}
+        >
+          Defaults
+          <span className="list-switch__count">{duration.length + starts.length}</span>
+        </button>
+        {other.length > 0 && (
+          <button
+            type="button"
+            role="tab"
+            aria-selected={listView === 'other'}
+            className={`list-switch__btn${listView === 'other' ? ' is-active' : ''}`}
+            onClick={() => setListView('other')}
+          >
+            Other
+            <span className="list-switch__count">{other.length}</span>
+          </button>
+        )}
+        {isDeveloper && (
+          <button
+            type="button"
+            role="tab"
+            aria-selected={listView === 'adjust-time'}
+            className={`list-switch__btn${listView === 'adjust-time' ? ' is-active' : ''}`}
+            onClick={() => setListView('adjust-time')}
+          >
+            Adjust Time
+          </button>
+        )}
+        {isDeveloper && (
+          <button
+            type="button"
+            role="tab"
+            aria-selected={listView === 'holiday'}
+            className={`list-switch__btn${listView === 'holiday' ? ' is-active' : ''}`}
+            onClick={() => setListView('holiday')}
+          >
+            Holiday limit
+            <span className="list-switch__count">{holidaySetting?.value ?? '—'}</span>
+          </button>
+        )}
+        {isDeveloper && (
+          <button
+            type="button"
+            role="tab"
+            aria-selected={listView === 'portal-weather'}
+            className={`list-switch__btn${listView === 'portal-weather' ? ' is-active' : ''}`}
+            onClick={() => setListView('portal-weather')}
+          >
+            Portal weather
+          </button>
+        )}
+      </div>
+
+      {listView === 'defaults' && (
+        <>
+          <section className="settings-list">
+            <h2 className="settings-section-title">Default duration limits</h2>
+            <p className="hint">
+              Used when seeding new shift–department combinations. Existing configured rows keep their
+              values until you change them below.
+            </p>
+            {duration.map((s) => (
+              <SettingRow key={s.id} setting={s} min={1} max={240} onChange={updateLocal} onSave={save} />
+            ))}
+          </section>
+          <section className="settings-list">
+            <h2 className="settings-section-title">Default start limits for new departments</h2>
+            <p className="hint">
+              Used when a new department or shift–department row is created. Existing configured rows
+              keep their values until you change them on the By shift tab.
+            </p>
+            {starts.map((s) => (
+              <SettingRow key={s.id} setting={s} min={1} max={20} onChange={updateLocal} onSave={save} />
+            ))}
+          </section>
+        </>
+      )}
+
+      {listView === 'shifts' && shiftGroups.map((group) => (
+        <section className="settings-list shift-limits" key={group.shiftId}>
+          <div className="settings-shift-head shift-limits__head">
+            <div>
+              <div className="shift-limits__title">
+                <h2 className="settings-section-title">{group.shiftDisplay}</h2>
+                <span className={`shift-limits__status${group.isActive ? ' is-active' : ''}`}>
+                  {group.isActive ? 'Active' : 'Inactive'}
+                </span>
+              </div>
+              <p className="hint">
+                Set meal and comfort start counts and duration limits for each department on this shift.
+                Example: Data Team meal starts 2 on Day shift and 5 on Night shift.
+              </p>
+            </div>
+            <button
+              type="button"
+              className="btn btn-primary shift-limits__save-all"
+              disabled={
+                savingShiftId === group.shiftId
+                || group.departments.every((row) => row.departmentIsDeleted)
+              }
+              onClick={() => saveShiftGroup(group)}
+            >
+              {savingShiftId === group.shiftId ? 'Saving…' : 'Save all for this shift'}
+            </button>
+          </div>
+
+          <div className="shift-limits__table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Department</th>
+                  <th>Employees</th>
+                  <th className="shift-limits__col shift-limits__col--meal">
+                    <span className="shift-limits__kicker">Meal</span>
+                    Starts
+                  </th>
+                  <th className="shift-limits__col shift-limits__col--meal">
+                    <span className="shift-limits__kicker">Meal</span>
+                    Minutes
+                  </th>
+                  <th className="shift-limits__col shift-limits__col--comfort shift-limits__col--split">
+                    <span className="shift-limits__kicker">Comfort</span>
+                    Starts
+                  </th>
+                  <th className="shift-limits__col shift-limits__col--comfort">
+                    <span className="shift-limits__kicker">Comfort</span>
+                    Minutes
+                  </th>
+                  <th className="shift-limits__action" aria-label="Save row" />
+                </tr>
+              </thead>
+              <tbody>
+                {group.departments.map((row) => {
+                  const key = rowKey(row.shiftId, row.departmentId);
+                  return (
+                    <tr key={key} className={row.departmentIsDeleted ? 'is-deleted' : ''}>
+                      <td className="shift-limits__dept">
+                        <span className="shift-limits__name">{row.departmentName}</span>
+                        {row.departmentIsDeleted && <span className="shift-limits__tag">Deleted</span>}
+                      </td>
+                      <td className="shift-limits__people">
+                        <span className="shift-limits__count">{row.employeeCount}</span>
+                      </td>
+                      <td className="shift-limits__cell shift-limits__cell--meal">
+                        <input
+                          className="shift-limits__input shift-limits__input--meal"
+                          type="number"
+                          min={1}
+                          max={20}
+                          value={row.mealStartLimit}
+                          onChange={(e) => updateShiftDeptLocal(row.shiftId, row.departmentId, 'mealStartLimit', e.target.value)}
+                          aria-label={`${row.departmentName} meal start limit on ${group.shiftName}`}
+                        />
+                      </td>
+                      <td className="shift-limits__cell shift-limits__cell--meal">
+                        <input
+                          className="shift-limits__input shift-limits__input--meal"
+                          type="number"
+                          min={1}
+                          max={240}
+                          value={row.mealLimitMinutes}
+                          onChange={(e) => updateShiftDeptLocal(row.shiftId, row.departmentId, 'mealLimitMinutes', e.target.value)}
+                          aria-label={`${row.departmentName} meal duration on ${group.shiftName}`}
+                        />
+                      </td>
+                      <td className="shift-limits__cell shift-limits__cell--comfort shift-limits__cell--split">
+                        <input
+                          className="shift-limits__input shift-limits__input--comfort"
+                          type="number"
+                          min={1}
+                          max={20}
+                          value={row.comfortStartLimit}
+                          onChange={(e) => updateShiftDeptLocal(row.shiftId, row.departmentId, 'comfortStartLimit', e.target.value)}
+                          aria-label={`${row.departmentName} comfort start limit on ${group.shiftName}`}
+                        />
+                      </td>
+                      <td className="shift-limits__cell shift-limits__cell--comfort">
+                        <input
+                          className="shift-limits__input shift-limits__input--comfort"
+                          type="number"
+                          min={1}
+                          max={240}
+                          value={row.comfortLimitMinutes}
+                          onChange={(e) => updateShiftDeptLocal(row.shiftId, row.departmentId, 'comfortLimitMinutes', e.target.value)}
+                          aria-label={`${row.departmentName} comfort duration on ${group.shiftName}`}
+                        />
+                      </td>
+                      <td className="shift-limits__action">
+                        <button
+                          type="button"
+                          className="btn btn-primary shift-limits__save"
+                          disabled={row.departmentIsDeleted || savingKey === key || savingShiftId === group.shiftId}
+                          title={row.departmentIsDeleted ? 'Recover this department before saving limits.' : undefined}
+                          onClick={() => saveShiftDept(row)}
+                        >
+                          {savingKey === key ? 'Saving…' : 'Save'}
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+                {group.departments.length === 0 && (
+                  <tr>
+                    <td className="empty" colSpan={7}>No departments found. Create departments first.</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      ))}
+
+      {listView === 'shifts' && shiftGroups.length === 0 && (
+        <section className="settings-list">
+          <p className="hint">No shifts found. Create shifts and departments first, then configure limits here.</p>
+        </section>
+      )}
+
+      {listView === 'adjust-time' && isDeveloper && (
+        <AdjustTimeSection />
+      )}
+
+      {listView === 'holiday' && isDeveloper && (
+        <section className="settings-list">
+          <h2 className="settings-section-title">Monthly holiday day limit</h2>
+          <p className="hint">
+            Developer only. This is the number of confirmed absent shift days each employee may
+            take in a calendar month. Attendance analytics uses this value and does not change
+            employee, break, or shift records. Use 0 when any confirmed holiday day should be over the limit.
+          </p>
+          {holidaySetting ? (
+            <SettingRow
+              setting={holidaySetting}
+              min={0}
+              max={31}
+              onChange={updateLocal}
+              onSave={save}
+            />
+          ) : (
+            <p className="hint">The holiday limit is not stored yet. Restart the API so it can be added without changing existing settings.</p>
+          )}
+        </section>
+      )}
+
+      {listView === 'portal-weather' && isDeveloper && (
+        <section className="settings-list">
+          <h2 className="settings-section-title">Employee details weather</h2>
+          <p className="hint">
+            Developer only. Choose the effect in the employee details window on the break portal.
+          </p>
+          <div className="setting-row">
+            <div>
+              <strong>Portal weather</strong>
+              <div className="muted">Nothing, rain, snow, ducks, birds, or falling watermelon, orange, clowns, bananas, stars, weed paper, and a masquerade joker. Applies only to the employee details window.</div>
+              <div className="muted mono">{PORTAL_WEATHER_KEY}</div>
+            </div>
+            <div className="setting-edit">
+              <select
+                className="portal-weather-select"
+                value={weatherSetting?.value || 'rain'}
+                onChange={(e) => weatherSetting && updateLocal(weatherSetting.id, e.target.value)}
+                aria-label="Portal weather"
+              >
+                {PORTAL_WEATHER_OPTIONS.map((option) => (
+                  <option key={option.value} value={option.value}>{option.label}</option>
+                ))}
+              </select>
+              <button
+                type="button"
+                className="btn btn-primary"
+                disabled={!weatherSetting}
+                onClick={() => save(PORTAL_WEATHER_KEY, weatherSetting?.value || 'rain')}
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {listView === 'other' && other.length > 0 && (
+        <section className="settings-list">
+          <h2 className="settings-section-title">Other settings</h2>
+          {other.map((s) => (
+            <div className="setting-row" key={s.id}>
+              <div>
+                <strong>{settingLabel(s.key)}</strong>
+                <div className="muted">{s.description || '—'}</div>
+                <div className="muted mono">{s.key}</div>
+              </div>
+              <div className="setting-edit">
+                <input
+                  value={s.value}
+                  onChange={(e) => updateLocal(s.id, e.target.value)}
+                />
+                <button type="button" className="btn btn-primary" onClick={() => save(s.key, s.value)}>Save</button>
+              </div>
+            </div>
+          ))}
+        </section>
+      )}
+    </div>
+  );
+}
