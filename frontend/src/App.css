@@ -1305,12 +1305,12 @@ html[data-theme="dark"] .portal-shell .portal-weather-picker__button:focus-visib
 
 .portal-shell .portal-employee-header__actions .portal-header-login.btn-primary:hover,
 .portal-shell .portal-employee-header__actions .portal-header-login.btn-primary:focus-visible {
-  background-color: #14542d;
+  background-color: #fff;
   background-image: none;
-  color: #fff;
+  color: #14542d;
   border-color: #14542d;
   transform: none;
-  box-shadow: 0 0 10px 3px rgba(20, 84, 45, 0.22);
+  box-shadow: 0 0 10px 3px rgba(20, 84, 45, 0.2);
 }
 
 .portal-header-login:hover .portal-header-login__icon--lock,
@@ -9787,12 +9787,12 @@ html[data-theme="dark"] .portal-shell .portal-employee-header__actions .portal-h
 
 html[data-theme="dark"] .portal-shell .portal-employee-header__actions .portal-header-login.btn-primary:hover,
 html[data-theme="dark"] .portal-shell .portal-employee-header__actions .portal-header-login.btn-primary:focus-visible {
-  background-color: #14542d;
+  background-color: #fff;
   background-image: none;
-  color: #fff;
-  border-color: #14542d;
+  color: #14542d;
+  border-color: #fff;
   transform: none;
-  box-shadow: 0 0 12px 4px rgba(134, 214, 160, 0.32);
+  box-shadow: 0 0 12px 4px rgba(255, 255, 255, 0.16);
 }
 
 html[data-theme="dark"] .portal-shell .portal-clock__time {
