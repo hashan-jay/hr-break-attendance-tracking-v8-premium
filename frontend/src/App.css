@@ -2265,9 +2265,14 @@ html[data-theme="dark"] .tracking-page .portal-roster .portal-board__table th {
 }
 
 @media (min-width: 721px) {
+  html[data-theme="dark"] .tracking-page .portal-roster.portal-board {
+    border-color: #2a3038;
+    box-shadow: inset 0 0 0 1px #2a3038;
+  }
+
   html[data-theme="dark"] .tracking-page .portal-roster .portal-board__table th,
   html[data-theme="dark"] .tracking-page .portal-roster .portal-board__table td {
-    border-bottom-color: rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid #2a3038;
   }
 }
 
