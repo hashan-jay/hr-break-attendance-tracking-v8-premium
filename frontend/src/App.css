@@ -594,8 +594,15 @@ html[data-theme="dark"] .portal-logout:focus-visible {
   flex: 0 0 auto;
 }
 
-.portal-mobile .theme-toggle.theme-toggle--circle {
+.portal-mobile .theme-toggle.theme-toggle--circle,
+.portal-mobile .tz-switch {
   display: none;
+}
+
+@media (max-width: 1260px) {
+  .portal-side-desktop .tz-switch {
+    display: none;
+  }
 }
 
 .portal-mobile {
