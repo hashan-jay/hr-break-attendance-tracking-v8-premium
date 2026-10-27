@@ -213,6 +213,8 @@
   align-items: center;
   gap: 0.4rem;
   min-width: 0;
+  position: relative;
+  overflow: visible;
 }
 
 .app-portal {
@@ -8823,10 +8825,23 @@ html[data-theme="dark"] .tz-switch__button:focus-visible {
   box-shadow: 0 16px 40px rgba(15, 23, 42, 0.16);
 }
 
-.portal-side .tz-switch__menu,
 .login-theme-toggle .tz-switch__menu {
   right: auto;
   left: 0;
+}
+
+.portal-side .tz-switch {
+  position: static;
+}
+
+.portal-side .tz-switch__menu {
+  top: auto;
+  bottom: calc(100% + 0.45rem);
+  left: 0;
+  right: 0;
+  width: auto;
+  max-height: min(22rem, calc(100vh - 16rem));
+  z-index: 50;
 }
 
 @media (max-width: 720px) {
