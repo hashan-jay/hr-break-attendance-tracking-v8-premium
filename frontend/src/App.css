@@ -2264,6 +2264,13 @@ html[data-theme="dark"] .tracking-page .portal-roster .portal-board__table th {
   background: rgba(18, 22, 30, 0.9);
 }
 
+@media (min-width: 721px) {
+  html[data-theme="dark"] .tracking-page .portal-roster .portal-board__table th,
+  html[data-theme="dark"] .tracking-page .portal-roster .portal-board__table td {
+    border-bottom-color: rgba(255, 255, 255, 0.08);
+  }
+}
+
 html[data-theme="dark"] .tracking-state__pill {
   background: rgba(255, 255, 255, 0.06);
   color: #d4d4d4;
