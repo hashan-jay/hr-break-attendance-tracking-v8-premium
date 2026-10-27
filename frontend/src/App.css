@@ -564,6 +564,8 @@ html[data-theme="dark"] .portal-logout:focus-visible {
 .portal-mobile-bar__title {
   font-weight: 700;
   font-size: 0.95rem;
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .portal-menu-btn {
@@ -580,8 +582,13 @@ html[data-theme="dark"] .portal-logout:focus-visible {
   flex: 0 0 auto;
 }
 
-.portal-mobile-bar .theme-toggle--circle {
+.portal-mobile-bar .tz-switch {
   margin-left: auto;
+  flex: 0 0 auto;
+}
+
+.portal-mobile-bar .theme-toggle--circle {
+  margin-left: 0;
   flex: 0 0 auto;
 }
 
