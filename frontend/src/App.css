@@ -599,6 +599,18 @@ html[data-theme="dark"] .portal-logout:focus-visible {
   display: none;
 }
 
+.portal-mobile .portal-side__tools {
+  display: block;
+}
+
+.portal-mobile .portal-side--ig .portal-clock {
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
 @media (max-width: 1260px) {
   .portal-side-desktop .tz-switch {
     display: none;
