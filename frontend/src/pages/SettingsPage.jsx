@@ -56,7 +56,7 @@ export default function SettingsPage() {
       api.get('/settings/shift-department-break-limits'),
     ]);
     setSettings(settingsRes.data);
-    setShiftGroups(shiftRes.data);
+    setShiftGroups((shiftRes.data || []).filter((group) => group.isActive));
   };
 
   useEffect(() => {
