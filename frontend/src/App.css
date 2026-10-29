@@ -11033,16 +11033,14 @@ html[data-theme="dark"] .attendance-analytics .staff-results.headlines-card {
   box-shadow: 0 16px 36px rgba(0, 0, 0, 0.28);
 }
 
-@media (min-width: 721px) {
-  html[data-theme="dark"] .attendance-analytics .table-wrap {
-    border-color: #2a3038;
-    box-shadow: inset 0 0 0 1px #2a3038;
-  }
+html[data-theme="dark"] .attendance-analytics .table-wrap {
+  border-color: #2a3038;
+  box-shadow: inset 0 0 0 1px #2a3038;
+}
 
-  html[data-theme="dark"] .attendance-analytics .table-wrap th,
-  html[data-theme="dark"] .attendance-analytics .table-wrap td {
-    border-bottom: 1px solid #2a3038;
-  }
+html[data-theme="dark"] .attendance-analytics .table-wrap th,
+html[data-theme="dark"] .attendance-analytics .table-wrap td {
+  border-bottom-color: #2a3038;
 }
 
 html[data-theme="dark"] .attendance-analytics .analytics-kpis .headlines-metric {
@@ -14271,12 +14269,12 @@ html[data-theme="dark"] .attendance-analytics .analytics-dept {
   }
 
   html[data-theme="dark"] .attendance-analytics .analytics-people td:nth-child(1) {
-    border-bottom-color: rgba(255, 255, 255, 0.1);
+    border-bottom-color: #2a3038;
   }
 
   html[data-theme="dark"] .attendance-analytics .analytics-people tbody tr {
     background: rgba(255, 255, 255, 0.04);
-    border-color: rgba(255, 255, 255, 0.1);
+    border-color: #2a3038;
   }
 
   html[data-theme="dark"] .attendance-analytics .analytics-people tbody tr:has(td.empty) {
