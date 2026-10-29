@@ -12751,21 +12751,52 @@ html[data-theme="dark"] .attendance-analytics .analytics-dept {
     justify-content: center;
   }
 
+  .settings-page .settings-list {
+    padding: 0.95rem 0.95rem 0.35rem;
+  }
+
+  .settings-page .settings-section-title {
+    font-size: 1.05rem;
+    line-height: 1.3;
+  }
+
+  .settings-page .settings-list > .hint {
+    margin-bottom: 0.35rem;
+    line-height: 1.45;
+  }
+
   .settings-page .setting-row {
     flex-direction: column;
     align-items: stretch;
-    gap: 0.75rem;
+    gap: 0.7rem;
+    padding: 0.95rem 0.1rem 1rem;
+  }
+
+  .settings-page .setting-row strong {
+    display: block;
+    font-size: 0.98rem;
+    line-height: 1.35;
+  }
+
+  .settings-page .setting-row .muted {
+    overflow-wrap: anywhere;
+    line-height: 1.4;
   }
 
   .settings-page .setting-edit {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.5rem;
     width: 100%;
   }
 
   .settings-page .setting-edit input,
-  .settings-page .setting-edit select {
-    flex: 1 1 auto;
-    min-width: 0;
+  .settings-page .setting-edit select,
+  .settings-page .setting-edit .btn {
     width: 100%;
+    min-width: 0;
+    min-height: 2.65rem;
+    box-sizing: border-box;
   }
 
   .settings-page .settings-shift-head {
