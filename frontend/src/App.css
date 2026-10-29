@@ -4883,6 +4883,23 @@ tbody tr.is-deleted { background: var(--hover); color: var(--muted); }
 tbody tr.is-deleted:hover { background: var(--portal-accent-soft); }
 .empty { text-align: center; color: var(--muted); padding: 1.5rem; }
 
+.attendance-roster__empty {
+  margin: 0;
+  padding: 0.65rem 0.9rem;
+  border: 1px solid var(--line, #d5ddd6);
+  border-radius: 0.85rem;
+  background: transparent;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.35;
+}
+
+html[data-theme="dark"] .attendance-roster__empty {
+  border-color: #2a3038;
+  color: #a3a3a3;
+}
+
 .status-badge {
   display: inline-flex;
   align-items: center;

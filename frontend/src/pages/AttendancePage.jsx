@@ -130,6 +130,7 @@ export default function AttendancePage() {
               </span>
             </header>
 
+            {present.length ? (
             <div className="table-wrap">
               <table>
                 <thead>
@@ -153,16 +154,14 @@ export default function AttendancePage() {
                       <td data-label="Status"><StatusBadge status="PRESENT" color="green" /></td>
                     </tr>
                   ))}
-                  {!present.length && (
-                    <tr>
-                      <td colSpan={6} className="empty">
-                        No one has finished a meal or comfort break for this shift yet.
-                      </td>
-                    </tr>
-                  )}
                 </tbody>
               </table>
             </div>
+            ) : (
+              <p className="attendance-roster__empty">
+                No one has finished a meal or comfort break for this shift yet.
+              </p>
+            )}
           </section>
 
           {roster.showAbsent && (
