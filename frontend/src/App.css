@@ -12799,6 +12799,21 @@ html[data-theme="dark"] .attendance-analytics .analytics-dept {
     box-sizing: border-box;
   }
 
+  .settings-page .settings-list:has(.staff-menu-select__button[aria-expanded="true"]) {
+    position: relative;
+    z-index: 12;
+    overflow: visible;
+  }
+
+  .settings-page .setting-edit .staff-menu-select,
+  .settings-page .setting-edit .staff-menu-select__button {
+    width: 100%;
+  }
+
+  .settings-page .setting-edit .staff-menu-select__menu {
+    max-height: min(46vh, 18rem);
+  }
+
   .settings-page .settings-shift-head {
     flex-direction: column;
     align-items: stretch;

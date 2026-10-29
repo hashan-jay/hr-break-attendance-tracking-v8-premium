@@ -5,6 +5,7 @@ import { useFeedback } from '../feedback/FeedbackContext';
 import { settingLabel } from '../lib/breakHelpers';
 import { PORTAL_WEATHER_KEY, PORTAL_WEATHER_OPTIONS } from '../lib/portalWeather';
 import AdjustTimeSection from '../components/AdjustTimeSection';
+import StaffMenuSelect from '../components/StaffMenuSelect';
 
 const DURATION_KEYS = ['MealBreakLimitMinutes', 'ComfortBreakLimitMinutes'];
 const START_KEYS = ['MealBreakStartLimit', 'ComfortBreakStartLimit'];
@@ -468,16 +469,13 @@ export default function SettingsPage() {
               <div className="muted mono">{PORTAL_WEATHER_KEY}</div>
             </div>
             <div className="setting-edit">
-              <select
-                className="portal-weather-select"
+              <StaffMenuSelect
+                label="Portal weather"
                 value={weatherSetting?.value || 'rain'}
-                onChange={(e) => weatherSetting && updateLocal(weatherSetting.id, e.target.value)}
-                aria-label="Portal weather"
-              >
-                {PORTAL_WEATHER_OPTIONS.map((option) => (
-                  <option key={option.value} value={option.value}>{option.label}</option>
-                ))}
-              </select>
+                disabled={!weatherSetting}
+                onChange={(value) => weatherSetting && updateLocal(weatherSetting.id, value)}
+                options={PORTAL_WEATHER_OPTIONS}
+              />
               <button
                 type="button"
                 className="btn btn-primary"
