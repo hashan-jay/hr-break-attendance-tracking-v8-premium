@@ -12811,6 +12811,8 @@ html[data-theme="dark"] .attendance-analytics .analytics-dept {
   }
 
   .settings-page .setting-edit .staff-menu-select__menu {
+    top: auto;
+    bottom: calc(100% + 0.28rem);
     max-height: min(46vh, 18rem);
   }
 
