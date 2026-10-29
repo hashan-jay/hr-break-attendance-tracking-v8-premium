@@ -4900,6 +4900,16 @@ html[data-theme="dark"] .attendance-roster__empty {
   color: #a3a3a3;
 }
 
+html[data-theme="dark"] .attendance-page .attendance-roster .table-wrap {
+  border-color: #2a3038;
+  box-shadow: none;
+}
+
+html[data-theme="dark"] .attendance-page .attendance-roster .table-wrap th,
+html[data-theme="dark"] .attendance-page .attendance-roster .table-wrap td {
+  border-bottom-color: #2a3038;
+}
+
 .status-badge {
   display: inline-flex;
   align-items: center;
@@ -13025,7 +13035,7 @@ html[data-theme="dark"] .attendance-analytics .analytics-dept {
 
   html[data-theme="dark"] .attendance-page .attendance-roster tbody tr {
     background: rgba(255, 255, 255, 0.04);
-    border-color: rgba(255, 255, 255, 0.1);
+    border-color: #2a3038;
   }
 
   html[data-theme="dark"] .attendance-page .attendance-roster tbody tr:has(td.empty) {
