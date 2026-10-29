@@ -12779,7 +12779,133 @@ html[data-theme="dark"] .attendance-analytics .analytics-dept {
 
   .settings-page .shift-limits__table {
     max-width: 100%;
-    overflow-x: auto;
+    overflow: visible;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+  }
+
+  .settings-page .shift-limits table {
+    display: block;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .settings-page .shift-limits thead {
+    display: none;
+  }
+
+  .settings-page .shift-limits tbody {
+    display: grid;
+    gap: 0.7rem;
+  }
+
+  .settings-page .shift-limits tbody tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-areas:
+      "dept people"
+      "meal-starts meal-minutes"
+      "comfort-starts comfort-minutes"
+      "save save";
+    gap: 0.65rem 0.6rem;
+    padding: 0.95rem;
+    border: 1px solid #e4ebe6;
+    border-radius: 1.1rem;
+    background: #fff;
+  }
+
+  .settings-page .shift-limits tbody tr:has(td.empty) {
+    display: block;
+    padding: 0.4rem 0;
+    border: 0;
+    background: transparent;
+  }
+
+  .settings-page .shift-limits td {
+    display: grid;
+    align-content: start;
+    gap: 0.28rem;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    text-align: left;
+    background: transparent;
+  }
+
+  .settings-page .shift-limits td::before {
+    content: attr(data-label);
+    color: #64748b;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .settings-page .shift-limits td.shift-limits__dept {
+    grid-area: dept;
+  }
+
+  .settings-page .shift-limits td.shift-limits__dept::before,
+  .settings-page .shift-limits td.shift-limits__action::before,
+  .settings-page .shift-limits td.empty::before {
+    content: none;
+  }
+
+  .settings-page .shift-limits td.shift-limits__people { grid-area: people; justify-items: end; text-align: right; }
+  .settings-page .shift-limits td.shift-limits__cell--meal:nth-child(3) { grid-area: meal-starts; }
+  .settings-page .shift-limits td.shift-limits__cell--meal:nth-child(4) { grid-area: meal-minutes; }
+  .settings-page .shift-limits td.shift-limits__cell--comfort:nth-child(5) { grid-area: comfort-starts; }
+  .settings-page .shift-limits td.shift-limits__cell--comfort:nth-child(6) { grid-area: comfort-minutes; }
+  .settings-page .shift-limits td.shift-limits__action { grid-area: save; }
+
+  .settings-page .shift-limits__name {
+    font-size: 1rem;
+    line-height: 1.3;
+  }
+
+  .settings-page .shift-limits__count {
+    min-width: 2rem;
+    min-height: 2rem;
+    justify-content: center;
+  }
+
+  .settings-page .shift-limits__input {
+    width: 100%;
+    height: 2.6rem;
+    font-size: 1.05rem;
+  }
+
+  .settings-page .shift-limits__save {
+    width: 100%;
+    min-height: 2.5rem;
+  }
+
+  .settings-page .shift-limits tbody tr:hover td,
+  .settings-page .shift-limits tbody tr:hover td.shift-limits__cell--meal,
+  .settings-page .shift-limits tbody tr:hover td.shift-limits__cell--comfort {
+    background: transparent;
+  }
+
+  html[data-theme="dark"] .settings-page .shift-limits tbody tr {
+    background: #161b22;
+    border-color: #2a3038;
+  }
+
+  html[data-theme="dark"] .settings-page .shift-limits tbody tr:has(td.empty) {
+    background: transparent;
+    border: 0;
+  }
+
+  html[data-theme="dark"] .settings-page .shift-limits td::before {
+    color: #94a3b8;
+  }
+
+  html[data-theme="dark"] .settings-page .shift-limits tbody tr:hover td,
+  html[data-theme="dark"] .settings-page .shift-limits tbody tr:hover td.shift-limits__cell--meal,
+  html[data-theme="dark"] .settings-page .shift-limits tbody tr:hover td.shift-limits__cell--comfort,
+  html[data-theme="dark"] .settings-page .shift-limits tbody tr.is-deleted:hover td {
+    background: transparent;
   }
 
   .adjust-time-toolbar {

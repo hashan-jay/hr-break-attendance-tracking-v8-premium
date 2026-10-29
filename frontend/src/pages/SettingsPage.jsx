@@ -347,14 +347,14 @@ export default function SettingsPage() {
                   const key = rowKey(row.shiftId, row.departmentId);
                   return (
                     <tr key={key} className={row.departmentIsDeleted ? 'is-deleted' : ''}>
-                      <td className="shift-limits__dept">
+                      <td className="shift-limits__dept" data-label="Department">
                         <span className="shift-limits__name">{row.departmentName}</span>
                         {row.departmentIsDeleted && <span className="shift-limits__tag">Deleted</span>}
                       </td>
-                      <td className="shift-limits__people">
+                      <td className="shift-limits__people" data-label="Employees">
                         <span className="shift-limits__count">{row.employeeCount}</span>
                       </td>
-                      <td className="shift-limits__cell shift-limits__cell--meal">
+                      <td className="shift-limits__cell shift-limits__cell--meal" data-label="Meal starts">
                         <input
                           className="shift-limits__input shift-limits__input--meal"
                           type="number"
@@ -365,7 +365,7 @@ export default function SettingsPage() {
                           aria-label={`${row.departmentName} meal start limit on ${group.shiftName}`}
                         />
                       </td>
-                      <td className="shift-limits__cell shift-limits__cell--meal">
+                      <td className="shift-limits__cell shift-limits__cell--meal" data-label="Meal minutes">
                         <input
                           className="shift-limits__input shift-limits__input--meal"
                           type="number"
@@ -376,7 +376,7 @@ export default function SettingsPage() {
                           aria-label={`${row.departmentName} meal duration on ${group.shiftName}`}
                         />
                       </td>
-                      <td className="shift-limits__cell shift-limits__cell--comfort shift-limits__cell--split">
+                      <td className="shift-limits__cell shift-limits__cell--comfort shift-limits__cell--split" data-label="Comfort starts">
                         <input
                           className="shift-limits__input shift-limits__input--comfort"
                           type="number"
@@ -387,7 +387,7 @@ export default function SettingsPage() {
                           aria-label={`${row.departmentName} comfort start limit on ${group.shiftName}`}
                         />
                       </td>
-                      <td className="shift-limits__cell shift-limits__cell--comfort">
+                      <td className="shift-limits__cell shift-limits__cell--comfort" data-label="Comfort minutes">
                         <input
                           className="shift-limits__input shift-limits__input--comfort"
                           type="number"
@@ -398,7 +398,7 @@ export default function SettingsPage() {
                           aria-label={`${row.departmentName} comfort duration on ${group.shiftName}`}
                         />
                       </td>
-                      <td className="shift-limits__action">
+                      <td className="shift-limits__action" data-label="Save">
                         <button
                           type="button"
                           className="btn btn-primary shift-limits__save"
