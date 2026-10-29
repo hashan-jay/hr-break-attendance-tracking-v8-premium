@@ -13792,21 +13792,30 @@ html[data-theme="dark"] .attendance-analytics .analytics-dept {
   }
 
   .users-page .users-table td.users-table__actions {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.5rem;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.4rem;
+    width: 100%;
     margin-top: 0.15rem;
+    white-space: normal;
   }
 
   .users-page .users-table .users-table__update,
   .users-page .users-table .users-table__password,
   .users-page .users-table .users-table__activate,
   .users-page .users-table .users-table__deactivate {
-    flex: 1 1 calc(50% - 0.5rem);
+    width: 100%;
+    min-width: 0;
+    min-height: 2.2rem;
+    margin: 0;
+    padding: 0.4rem 0.25rem;
+    font-size: 0.7rem;
+    line-height: 1.15;
     justify-content: center;
     text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .users-page .users-editor {
