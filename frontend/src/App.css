@@ -9447,6 +9447,34 @@ html[data-theme="dark"] tbody tr.start-limit-reached.selected {
   opacity: 0.92;
 }
 
+html[data-theme="dark"] .tracking-page .tracking-roster tbody tr.off-shift,
+html[data-theme="dark"] .tracking-page .tracking-roster tbody tr.off-shift:hover,
+html[data-theme="dark"] .tracking-page .tracking-roster tbody tr.off-shift.selected,
+html[data-theme="dark"] .tracking-page .tracking-roster .portal-board__table tr.off-shift {
+  background: #101318;
+  border-color: #2a3038;
+  color: #8b939e;
+  opacity: 1;
+  box-shadow: none;
+}
+
+html[data-theme="dark"] .tracking-page .tracking-roster tbody tr.off-shift td,
+html[data-theme="dark"] .tracking-page .tracking-roster tbody tr.off-shift .col-name,
+html[data-theme="dark"] .tracking-page .tracking-roster tbody tr.off-shift .tracking-limits-left,
+html[data-theme="dark"] .tracking-page .tracking-roster tbody tr.off-shift .tracking-limits-left strong,
+html[data-theme="dark"] .tracking-page .tracking-roster tbody tr.off-shift .tracking-break-cell strong {
+  color: #8b939e;
+}
+
+html[data-theme="dark"] .tracking-page .tracking-roster tbody tr.off-shift .status-badge,
+html[data-theme="dark"] .tracking-page .tracking-roster tbody tr.off-shift .tracking-state__pill,
+html[data-theme="dark"] .tracking-page .tracking-roster tbody tr.off-shift .tracking-state__pill.is-off {
+  background: #1a1f27;
+  color: #8b939e;
+  border-color: #2a3038;
+  box-shadow: none;
+}
+
 html[data-theme="dark"] td.is-live-total strong {
   color: #f0c878;
 }
