@@ -2283,16 +2283,14 @@ html[data-theme="dark"] .tracking-page .portal-roster .portal-board__table th {
   background: rgba(18, 22, 30, 0.9);
 }
 
-@media (min-width: 721px) {
-  html[data-theme="dark"] .tracking-page .portal-roster.portal-board {
-    border-color: #2a3038;
-    box-shadow: inset 0 0 0 1px #2a3038;
-  }
+html[data-theme="dark"] .tracking-page .portal-roster.portal-board {
+  border-color: #2a3038;
+  box-shadow: inset 0 0 0 1px #2a3038;
+}
 
-  html[data-theme="dark"] .tracking-page .portal-roster .portal-board__table th,
-  html[data-theme="dark"] .tracking-page .portal-roster .portal-board__table td {
-    border-bottom: 1px solid #2a3038;
-  }
+html[data-theme="dark"] .tracking-page .portal-roster .portal-board__table th,
+html[data-theme="dark"] .tracking-page .portal-roster .portal-board__table td {
+  border-bottom-color: #2a3038;
 }
 
 html[data-theme="dark"] .tracking-state__pill {
@@ -12449,7 +12447,7 @@ html[data-theme="dark"] .attendance-analytics .analytics-dept {
 
   html[data-theme="dark"] .tracking-page .tracking-roster .portal-board__table tr {
     background: rgba(255, 255, 255, 0.04);
-    border-color: rgba(255, 255, 255, 0.1);
+    border-color: #2a3038;
   }
 
   html[data-theme="dark"] .tracking-page .tracking-roster .portal-board__table td::before {
