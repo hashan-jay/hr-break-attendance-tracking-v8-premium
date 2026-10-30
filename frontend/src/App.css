@@ -2000,6 +2000,18 @@ html[data-theme="dark"] .portal-shell .portal-weather-picker__button:focus-visib
   background: rgba(255, 255, 255, 0.72);
 }
 
+@media (min-width: 721px) {
+  html[data-theme="dark"] .tracking-page .tracking-roster .portal-onbreak-chip {
+    background: #161b22;
+    border-color: #2a3038;
+    color: #d4d4d4;
+  }
+
+  html[data-theme="dark"] .tracking-page .tracking-roster .portal-onbreak-chip strong {
+    color: #f5f5f5;
+  }
+}
+
 .tracking-page .portal-onbreak-chip__dot {
   width: 0.48rem;
   height: 0.48rem;
