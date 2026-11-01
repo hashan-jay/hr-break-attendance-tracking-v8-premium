@@ -2266,11 +2266,9 @@ html[data-theme="dark"] .portal-shell .portal-weather-picker__button:focus-visib
 
 html[data-theme="dark"] .tracking-page .portal-employee-filters,
 html[data-theme="dark"] .tracking-page .tracking-roster {
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03)),
-    rgba(18, 22, 30, 0.82);
-  border-color: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.35);
+  background: #12161e;
+  border-color: #2a3038;
+  box-shadow: none;
 }
 
 html[data-theme="dark"] .tracking-page .portal-employee-filters .portal-board__shift,
@@ -2292,12 +2290,41 @@ html[data-theme="dark"] .tracking-page .portal-employee-filters .portal-board__s
 }
 
 html[data-theme="dark"] .tracking-page .portal-roster .portal-board__table th {
-  background: rgba(18, 22, 30, 0.9);
+  background: #161c27;
+  color: #9aa6b8;
 }
 
 html[data-theme="dark"] .tracking-page .portal-roster.portal-board {
+  background: transparent;
   border-color: #2a3038;
-  box-shadow: inset 0 0 0 1px #2a3038;
+  box-shadow: none;
+}
+
+html[data-theme="dark"] .tracking-page .tracking-roster tbody tr:not(.off-shift) td,
+html[data-theme="dark"] .tracking-page .tracking-roster tbody tr:not(.off-shift) .col-name {
+  color: #e8edf4;
+}
+
+html[data-theme="dark"] .tracking-page .tracking-roster tbody tr:hover:not(.on-break):not(.off-shift):not(.on-other-break) {
+  background: rgba(255, 255, 255, 0.035);
+}
+
+html[data-theme="dark"] .tracking-page .tracking-roster tbody tr.on-break,
+html[data-theme="dark"] .tracking-page .tracking-roster tbody tr.on-break:hover,
+html[data-theme="dark"] .tracking-page .tracking-roster tbody tr.on-break.selected {
+  background: #2a2118;
+  box-shadow: inset 3px 0 0 #fb923c;
+}
+
+html[data-theme="dark"] .tracking-page .tracking-roster .status-badge.status-green {
+  background: rgba(20, 83, 45, 0.55);
+  color: #86efac;
+  box-shadow: inset 0 0 0 1px rgba(134, 239, 172, 0.28);
+}
+
+html[data-theme="dark"] .tracking-page .tracking-roster .tracking-state__pill:not(.is-off):not(.is-live) {
+  background: #1c2838;
+  color: #d5deea;
 }
 
 html[data-theme="dark"] .tracking-page .portal-roster .portal-board__table th,
