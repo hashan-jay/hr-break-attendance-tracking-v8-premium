@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import api, { apiErrorMessage } from '../api/client';
 import { useLiveUpdates } from '../api/liveUpdates';
 import { StatusBadge } from '../components/UiBits';
+import DateSelect from '../components/DateSelect';
 import StaffMenuSelect from '../components/StaffMenuSelect';
 import { useFeedback } from '../feedback/FeedbackContext';
 import { useViewTimeZone } from '../theme/TimeZoneContext';
@@ -85,7 +86,7 @@ export default function AttendancePage() {
       <form className="toolbar report-filters" onSubmit={(event) => { event.preventDefault(); load(); }}>
         <label>
           Shift date
-          <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
+          <DateSelect label="Shift date" value={date} onChange={setDate} />
         </label>
         <label>
           Shift
