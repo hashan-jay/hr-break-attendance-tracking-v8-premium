@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import api, { apiErrorMessage } from '../api/client';
 import { useLiveUpdates } from '../api/liveUpdates';
+import DateSelect from '../components/DateSelect';
 import { LoadingBlock, StatusBadge } from '../components/UiBits';
 import { useFeedback } from '../feedback/FeedbackContext';
 import { useViewTimeZone } from '../theme/TimeZoneContext';
@@ -599,11 +600,11 @@ function ExceededShiftBoard({
         <div className="exceeded-board__tools">
           <label className="exceeded-board__date">
             <span>Date</span>
-            <input
-              type="date"
+            <DateSelect
+              label="Date"
               value={date}
               max={maxDate}
-              onChange={(event) => onDateChange(event.target.value || maxDate)}
+              onChange={(next) => onDateChange(next || maxDate)}
             />
           </label>
           <span className="header-stat-tile">

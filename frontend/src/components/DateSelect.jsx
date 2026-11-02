@@ -21,7 +21,7 @@ function sameDay(a, b) {
     && a.getDate() === b.getDate();
 }
 
-export default function DateSelect({ value, onChange, label = 'Date' }) {
+export default function DateSelect({ value, onChange, label = 'Date', max = '' }) {
   const selected = parseIso(value);
   const [open, setOpen] = useState(false);
   const [cursor, setCursor] = useState(() => selected || new Date());
@@ -66,8 +66,12 @@ export default function DateSelect({ value, onChange, label = 'Date' }) {
     : 'Select a date';
   const monthLabel = cursor.toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
   const today = new Date();
+  const maxDate = parseIso(max);
+
+  const isAfterMax = (date) => maxDate && date > maxDate && !sameDay(date, maxDate);
 
   const pick = (date) => {
+    if (isAfterMax(date)) return;
     onChange(toIso(date));
     setOpen(false);
   };
@@ -105,10 +109,12 @@ export default function DateSelect({ value, onChange, label = 'Date' }) {
               const outside = date.getMonth() !== cursor.getMonth();
               const isSelected = sameDay(date, selected);
               const isToday = sameDay(date, today);
+              const disabled = isAfterMax(date);
               return (
                 <button
                   key={toIso(date)}
                   type="button"
+                  disabled={disabled}
                   className={[
                     'date-select__day',
                     outside ? 'is-outside' : '',

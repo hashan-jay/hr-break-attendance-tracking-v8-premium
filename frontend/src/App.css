@@ -7224,8 +7224,27 @@ html[data-theme="dark"] .perm-checks input {
   cursor: pointer;
 }
 
+.date-select__day:disabled {
+  color: #c5ced6;
+  cursor: not-allowed;
+  background: transparent;
+}
+
 .date-select__day.is-outside {
   color: #a3adb8;
+}
+
+.exceeded-board__date .date-select,
+.exceeded-board__date .date-select__button {
+  width: 100%;
+}
+
+.exceeded-board:has(.date-select.is-open),
+.exceeded-board__head:has(.date-select.is-open),
+.exceeded-board__tools:has(.date-select.is-open) {
+  position: relative;
+  z-index: 20;
+  overflow: visible;
 }
 
 .date-select__day.is-today {
@@ -7263,6 +7282,7 @@ html[data-theme="dark"] .date-select__panel {
 }
 
 html[data-theme="dark"] .date-select__week,
+html[data-theme="dark"] .date-select__day:disabled,
 html[data-theme="dark"] .date-select__day.is-outside {
   color: #8b939e;
 }
@@ -12724,9 +12744,18 @@ html[data-theme="dark"] .attendance-analytics .analytics-dept {
     align-items: end;
   }
 
-  .tracking-page .exceeded-board__date input {
+  .tracking-page .exceeded-board__date .date-select__button {
     width: 100%;
     min-width: 0;
+    height: 2.75rem;
+  }
+
+  .tracking-page .exceeded-board__date .date-select__panel {
+    width: min(100vw - 1.6rem, 22rem);
+  }
+
+  .tracking-page .exceeded-board__date .date-select__day {
+    height: 2.4rem;
   }
 
   .tracking-page .exceeded-board .table-wrap {
