@@ -12753,6 +12753,12 @@ html[data-theme="dark"] .attendance-analytics .analytics-dept {
     align-items: end;
   }
 
+  .tracking-page .exceeded-board:has(.date-select.is-open),
+  .tracking-page .exceeded-board__head:has(.date-select.is-open),
+  .tracking-page .exceeded-board__tools:has(.date-select.is-open) {
+    z-index: 60;
+  }
+
   .tracking-page .exceeded-board__date .date-select__button {
     width: 100%;
     min-width: 0;
@@ -12760,19 +12766,20 @@ html[data-theme="dark"] .attendance-analytics .analytics-dept {
   }
 
   .tracking-page .exceeded-board__date .date-select__panel {
-    left: 50%;
-    right: auto;
-    width: min(100vw - 1.6rem, 22rem);
-    transform: translateX(-50%);
-  }
-
-  .tracking-page .exceeded-board__date .date-select--drop-up .date-select__panel {
-    top: auto;
-    bottom: calc(100% + 0.35rem);
+    position: fixed;
+    left: 0.85rem;
+    right: 0.85rem;
+    top: 50%;
+    bottom: auto;
+    width: auto;
+    max-height: calc(100vh - 7rem);
+    overflow: auto;
+    transform: translateY(-50%);
+    z-index: 80;
   }
 
   .tracking-page .exceeded-board__date .date-select__day {
-    height: 2.4rem;
+    height: 2.35rem;
   }
 
   .tracking-page .exceeded-board .table-wrap {

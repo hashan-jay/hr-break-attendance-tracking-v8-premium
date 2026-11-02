@@ -25,12 +25,49 @@ export default function DateSelect({ value, onChange, label = 'Date', max = '', 
   const selected = parseIso(value);
   const [open, setOpen] = useState(false);
   const [cursor, setCursor] = useState(() => selected || new Date());
+  const [panelStyle, setPanelStyle] = useState(null);
   const rootRef = useRef(null);
+  const buttonRef = useRef(null);
+  const dropUp = className.includes('date-select--drop-up');
 
   useEffect(() => {
     const parsed = parseIso(value);
     if (parsed) setCursor(parsed);
   }, [value]);
+
+  useEffect(() => {
+    if (!open || !dropUp) {
+      setPanelStyle(null);
+      return undefined;
+    }
+    const place = () => {
+      const button = buttonRef.current;
+      if (!button || window.innerWidth > 720) {
+        setPanelStyle(null);
+        return;
+      }
+      const rect = button.getBoundingClientRect();
+      const width = Math.min(rect.width, window.innerWidth - 24);
+      const left = Math.max(12, Math.min(rect.left, window.innerWidth - width - 12));
+      setPanelStyle({
+        position: 'fixed',
+        left,
+        width,
+        right: 'auto',
+        top: 'auto',
+        bottom: Math.max(8, window.innerHeight - rect.top + 8),
+        transform: 'none',
+        maxHeight: Math.max(180, rect.top - 16),
+      });
+    };
+    place();
+    window.addEventListener('resize', place);
+    window.addEventListener('scroll', place, true);
+    return () => {
+      window.removeEventListener('resize', place);
+      window.removeEventListener('scroll', place, true);
+    };
+  }, [open, dropUp]);
 
   useEffect(() => {
     if (!open) return undefined;
@@ -84,6 +121,7 @@ export default function DateSelect({ value, onChange, label = 'Date', max = '', 
     <div className={['date-select', open ? 'is-open' : '', className].filter(Boolean).join(' ')} ref={rootRef}>
       <button
         type="button"
+        ref={buttonRef}
         className="date-select__button"
         aria-haspopup="dialog"
         aria-expanded={open}
@@ -93,7 +131,7 @@ export default function DateSelect({ value, onChange, label = 'Date', max = '', 
         {labelText}
       </button>
       {open && (
-        <div className="date-select__panel" role="dialog" aria-label={label}>
+        <div className="date-select__panel" role="dialog" aria-label={label} style={panelStyle || undefined}>
           <div className="date-select__head">
             <strong>{monthLabel}</strong>
             <div className="date-select__nav">
