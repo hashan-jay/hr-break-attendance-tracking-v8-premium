@@ -604,6 +604,7 @@ function ExceededShiftBoard({
               label="Date"
               value={date}
               max={maxDate}
+              className={!busy && employees.length === 0 ? 'date-select--drop-up' : ''}
               onChange={(next) => onDateChange(next || maxDate)}
             />
           </label>

@@ -7239,6 +7239,15 @@ html[data-theme="dark"] .perm-checks input {
   width: 100%;
 }
 
+@media (min-width: 721px) {
+  .exceeded-board__date .date-select__panel {
+    left: 50%;
+    right: auto;
+    width: 18.5rem;
+    transform: translateX(-50%);
+  }
+}
+
 .exceeded-board:has(.date-select.is-open),
 .exceeded-board__head:has(.date-select.is-open),
 .exceeded-board__tools:has(.date-select.is-open) {
@@ -12751,7 +12760,15 @@ html[data-theme="dark"] .attendance-analytics .analytics-dept {
   }
 
   .tracking-page .exceeded-board__date .date-select__panel {
+    left: 50%;
+    right: auto;
     width: min(100vw - 1.6rem, 22rem);
+    transform: translateX(-50%);
+  }
+
+  .tracking-page .exceeded-board__date .date-select--drop-up .date-select__panel {
+    top: auto;
+    bottom: calc(100% + 0.35rem);
   }
 
   .tracking-page .exceeded-board__date .date-select__day {

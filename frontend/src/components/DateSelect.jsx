@@ -21,7 +21,7 @@ function sameDay(a, b) {
     && a.getDate() === b.getDate();
 }
 
-export default function DateSelect({ value, onChange, label = 'Date', max = '' }) {
+export default function DateSelect({ value, onChange, label = 'Date', max = '', className = '' }) {
   const selected = parseIso(value);
   const [open, setOpen] = useState(false);
   const [cursor, setCursor] = useState(() => selected || new Date());
@@ -81,7 +81,7 @@ export default function DateSelect({ value, onChange, label = 'Date', max = '' }
   };
 
   return (
-    <div className={`date-select${open ? ' is-open' : ''}`} ref={rootRef}>
+    <div className={['date-select', open ? 'is-open' : '', className].filter(Boolean).join(' ')} ref={rootRef}>
       <button
         type="button"
         className="date-select__button"
