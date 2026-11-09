@@ -7538,7 +7538,57 @@ html[data-theme="dark"] .perm-checks input {
 
 .exceeded-board__date .date-select,
 .exceeded-board__date .date-select__button {
-  width: 100%;
+  width: 11.5rem;
+}
+
+.exceeded-board__date .date-select__button {
+  height: 2.7rem;
+  border-radius: 0.95rem;
+  border: 1px solid #cfe3d6;
+  background: #fff;
+  color: #14542d;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.05);
+}
+
+.exceeded-board__date .date-select__button:hover,
+.exceeded-board__date .date-select.is-open .date-select__button {
+  border-color: #14542d;
+  background: #f7fdf9;
+  box-shadow: 0 0 0 3px rgba(20, 84, 45, 0.12);
+}
+
+.exceeded-board__date .date-select__panel {
+  border-radius: 1.15rem;
+  border-color: #d7e8dc;
+  overflow: hidden;
+}
+
+.exceeded-board__date .date-select__panel::before {
+  content: "";
+  display: block;
+  height: 3px;
+  margin: -0.75rem -0.75rem 0.7rem;
+  background: linear-gradient(90deg, #14542d, #22c55e 55%, #fb923c);
+}
+
+html[data-theme="dark"] .exceeded-board__date .date-select__button {
+  background: #121816;
+  border-color: rgba(134, 239, 172, 0.28);
+  color: #d1fae5;
+  box-shadow: none;
+}
+
+html[data-theme="dark"] .exceeded-board__date .date-select__button:hover,
+html[data-theme="dark"] .exceeded-board__date .date-select.is-open .date-select__button {
+  background: #17241c;
+  border-color: #86efac;
+  box-shadow: 0 0 0 3px rgba(134, 239, 172, 0.16);
+}
+
+html[data-theme="dark"] .exceeded-board__date .date-select__panel {
+  background: #101814;
+  border-color: rgba(134, 239, 172, 0.22);
+  color: #f4f7f5;
 }
 
 @media (min-width: 721px) {
