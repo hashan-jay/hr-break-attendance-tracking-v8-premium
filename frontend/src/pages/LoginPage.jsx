@@ -2,29 +2,29 @@ import { useState } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext';
 import { apiErrorMessage } from '../api/client';
-import { useFeedback } from '../feedback/FeedbackContext';
 import PortalCredits from '../components/PortalCredits';
 import ThemeToggle from '../components/ThemeToggle';
 
 export default function LoginPage() {
   const { login, isAuthenticated, loading } = useAuth();
-  const { toast } = useFeedback();
   const navigate = useNavigate();
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
 
   if (!loading && isAuthenticated) return <Navigate to="/app" replace />;
 
   const onSubmit = async (e) => {
     e.preventDefault();
     setBusy(true);
+    setError('');
     try {
       await login(userName, password);
       navigate('/app');
     } catch (err) {
-      toast.error(apiErrorMessage(err, 'Login failed. Check username and password.'));
+      setError(apiErrorMessage(err, 'Invalid username or password.'));
     } finally {
       setBusy(false);
     }
@@ -44,11 +44,17 @@ export default function LoginPage() {
           <h1 className="login-ig__title">Staff login</h1>
           <p className="login-hint">Use your HR username and password to sign in.</p>
           <form className="login-form login-ig__form" onSubmit={onSubmit}>
+            {error ? (
+              <p className="login-form__error" role="alert">{error}</p>
+            ) : null}
             <label>
               Username
               <input
                 value={userName}
-                onChange={(e) => setUserName(e.target.value)}
+                onChange={(e) => {
+                  setUserName(e.target.value);
+                  if (error) setError('');
+                }}
                 autoComplete="username"
                 autoCapitalize="none"
                 spellCheck={false}
@@ -61,7 +67,10 @@ export default function LoginPage() {
                 <input
                   type={showPassword ? 'text' : 'password'}
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    if (error) setError('');
+                  }}
                   autoComplete="current-password"
                   required
                 />

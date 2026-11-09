@@ -6196,6 +6196,19 @@ html[data-theme="dark"] .onbreak-now__timer {
   background: transparent;
 }
 
+.login-form__error {
+  margin: 0;
+  padding: 0.65rem 0.8rem;
+  border-radius: 0.85rem;
+  border: 1px solid rgba(190, 18, 60, 0.28);
+  background: rgba(255, 241, 242, 0.92);
+  color: #9f1239;
+  font-size: 0.82rem;
+  font-weight: 650;
+  line-height: 1.35;
+  text-align: center;
+}
+
 .login-screen--ig .login-form label {
   font-size: 0.78rem;
   font-weight: 600;
@@ -6352,6 +6365,12 @@ html[data-theme="dark"] .login-ig__subbrand,
 html[data-theme="dark"] .login-screen--ig .login-hint,
 html[data-theme="dark"] .login-screen--ig .login-form label {
   color: #a8a8a8;
+}
+
+html[data-theme="dark"] .login-form__error {
+  border-color: rgba(251, 113, 133, 0.35);
+  background: rgba(136, 19, 55, 0.28);
+  color: #fecdd3;
 }
 
 html[data-theme="dark"] .login-screen--ig .login-form input {
