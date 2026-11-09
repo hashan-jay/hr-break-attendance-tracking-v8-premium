@@ -16,6 +16,7 @@ import {
   isOffShift,
   offShiftReason,
   remainingStarts,
+  startCount,
   typeFields,
 } from '../lib/breakHelpers';
 
@@ -333,6 +334,23 @@ function TrackingEmployeeDialog({ employee, activeBreakType, busy, nowMs, onClos
   );
 }
 
+function LimitsUsedCell({ employee, historical }) {
+  const mealUsed = historical ? Number(employee.mealBreakCount || 0) : startCount(employee, BREAK_TYPES.MEAL);
+  const comfortUsed = historical ? Number(employee.comfortBreakCount || 0) : startCount(employee, BREAK_TYPES.COMFORT);
+  return (
+    <td className="tracking-limits-left" data-label="Limits used">
+      <span className="tracking-limits-left__row" title="Meal breaks this employee has already started">
+        <span className="tracking-limits-left__kind">Meal</span>
+        <strong>{mealUsed}</strong>
+      </span>
+      <span className="tracking-limits-left__row" title="Comfort breaks this employee has already started">
+        <span className="tracking-limits-left__kind">Comfort</span>
+        <strong>{comfortUsed}</strong>
+      </span>
+    </td>
+  );
+}
+
 function LimitsLeftCell({ employee, mealStartLimit, comfortStartLimit }) {
   const mealLeft = remainingStarts(employee, BREAK_TYPES.MEAL, mealStartLimit);
   const comfortLeft = remainingStarts(employee, BREAK_TYPES.COMFORT, comfortStartLimit);
@@ -570,8 +588,6 @@ function ExceededShiftBoard({
   employees,
   mealLimitMinutes,
   comfortLimitMinutes,
-  mealStartLimit,
-  comfortStartLimit,
   onInspect,
 }) {
   const headingDate = formatCalendarDay(date);
@@ -620,7 +636,7 @@ function ExceededShiftBoard({
             <tr>
               <th>Code</th>
               <th>Employee</th>
-              <th>{isToday ? 'Limits Left' : 'Breaks taken'}</th>
+              <th>Limits Used</th>
               <th>Department</th>
               <th>Shift</th>
               <th>{isToday ? 'Meal this shift' : 'Meal'}</th>
@@ -669,18 +685,7 @@ function ExceededShiftBoard({
                     {comfortOver && <span className="exceeded-card__flag is-comfort">Comfort exceeded</span>}
                   </span>
                 </td>
-                {isToday ? (
-                  <LimitsLeftCell
-                    employee={employee}
-                    mealStartLimit={mealStartLimit}
-                    comfortStartLimit={comfortStartLimit}
-                  />
-                ) : (
-                  <td data-label="Breaks taken">
-                    <div>Meal <strong>{employee.mealBreakCount}</strong></div>
-                    <div>Comfort <strong>{employee.comfortBreakCount}</strong></div>
-                  </td>
-                )}
+                <LimitsUsedCell employee={employee} historical={!isToday} />
                 <td data-label="Department">{employee.departmentName}</td>
                 <td data-label="Shift">{employee.shiftDisplay || employee.shiftName || '—'}</td>
                 <td data-label="Meal">
