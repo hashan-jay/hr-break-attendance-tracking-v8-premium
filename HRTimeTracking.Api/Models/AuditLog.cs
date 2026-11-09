@@ -21,7 +21,7 @@ public class AuditLog
     [MaxLength(2000)]
     public string? Details { get; set; }
 
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime CreatedAt { get; set; } = HRTimeTracking.Api.Services.TimeDisplay.NowLocal();
 
     [MaxLength(45)]
     public string? IpAddress { get; set; }

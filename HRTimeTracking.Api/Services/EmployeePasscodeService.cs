@@ -58,10 +58,10 @@ public class EmployeePasscodeService : IEmployeePasscodeService
             return Status(employee, "A passcode is already set for this employee. Enter it to start or end the break.", "ALREADY_SET");
 
         employee.PasscodeHash = _hasher.HashPassword(null!, request.Passcode);
-        employee.PasscodeSetAt = DateTime.UtcNow;
+        employee.PasscodeSetAt = TimeDisplay.NowLocal();
         employee.PasscodeFailedCount = 0;
         employee.PasscodeLockoutUntil = null;
-        employee.UpdatedAt = DateTime.UtcNow;
+        employee.UpdatedAt = TimeDisplay.NowLocal();
         await _db.SaveChangesAsync();
         await _audit.LogAsync(null, "PasscodeSet", "Employee", employee.Id.ToString(),
             $"Break passcode created for '{employee.FullName}' ({employee.EmployeeCode}).");
@@ -79,7 +79,7 @@ public class EmployeePasscodeService : IEmployeePasscodeService
         if (string.IsNullOrEmpty(employee.PasscodeHash))
             return new PasscodeApiResult(false, "Create your 3-character passcode first.", "PASSCODE_REQUIRED", false);
 
-        if (employee.PasscodeLockoutUntil.HasValue && employee.PasscodeLockoutUntil.Value <= DateTime.UtcNow)
+        if (employee.PasscodeLockoutUntil.HasValue && employee.PasscodeLockoutUntil.Value <= TimeDisplay.NowLocal())
         {
             employee.PasscodeFailedCount = 0;
             employee.PasscodeLockoutUntil = null;
@@ -121,7 +121,7 @@ public class EmployeePasscodeService : IEmployeePasscodeService
 
         employee.PasscodeFailedCount = 0;
         employee.PasscodeLockoutUntil = null;
-        employee.UpdatedAt = DateTime.UtcNow;
+        employee.UpdatedAt = TimeDisplay.NowLocal();
         await _db.SaveChangesAsync();
         return new PasscodeApiResult(true, "Passcode confirmed.", null, true, EmployeePasscodeRules.MaxAttempts);
     }
@@ -135,7 +135,7 @@ public class EmployeePasscodeService : IEmployeePasscodeService
         employee.PasscodeSetAt = null;
         employee.PasscodeFailedCount = 0;
         employee.PasscodeLockoutUntil = null;
-        employee.UpdatedAt = DateTime.UtcNow;
+        employee.UpdatedAt = TimeDisplay.NowLocal();
         await _db.SaveChangesAsync();
         await _audit.LogAsync(userId, "PasscodeReset", "Employee", employee.Id.ToString(),
             $"Break passcode reset for '{employee.FullName}' ({employee.EmployeeCode}).");
@@ -148,19 +148,19 @@ public class EmployeePasscodeService : IEmployeePasscodeService
         employee.PasscodeFailedCount += 1;
         if (employee.PasscodeFailedCount >= EmployeePasscodeRules.MaxAttempts)
         {
-            employee.PasscodeLockoutUntil = DateTime.UtcNow.AddMinutes(EmployeePasscodeRules.LockoutMinutes);
+            employee.PasscodeLockoutUntil = TimeDisplay.NowLocal().AddMinutes(EmployeePasscodeRules.LockoutMinutes);
             employee.PasscodeFailedCount = EmployeePasscodeRules.MaxAttempts;
         }
-        employee.UpdatedAt = DateTime.UtcNow;
+        employee.UpdatedAt = TimeDisplay.NowLocal();
         await _db.SaveChangesAsync();
     }
 
     private static bool IsLocked(Employee employee) =>
-        employee.PasscodeLockoutUntil.HasValue && employee.PasscodeLockoutUntil.Value > DateTime.UtcNow;
+        employee.PasscodeLockoutUntil.HasValue && employee.PasscodeLockoutUntil.Value > TimeDisplay.NowLocal();
 
     private static PasscodeApiResult Status(Employee employee, string message, string? errorCode = null)
     {
-        var now = DateTime.UtcNow;
+        var now = TimeDisplay.NowLocal();
         var locked = employee.PasscodeLockoutUntil.HasValue && employee.PasscodeLockoutUntil.Value > now;
         var failed = locked
             ? EmployeePasscodeRules.MaxAttempts
@@ -180,7 +180,7 @@ public class EmployeePasscodeService : IEmployeePasscodeService
 
     private static PasscodeApiResult Locked(Employee employee)
     {
-        var until = TimeDisplay.FromStoredUtc(employee.PasscodeLockoutUntil ?? DateTime.UtcNow);
+        var until = TimeDisplay.FromStoredUtc(employee.PasscodeLockoutUntil ?? TimeDisplay.NowLocal());
         return new PasscodeApiResult(
             false,
             $"Too many incorrect attempts. Try again after {until:HH:mm}.",

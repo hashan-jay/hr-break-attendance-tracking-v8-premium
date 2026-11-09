@@ -1659,7 +1659,6 @@ D:\BPO-Projects\hr-break-attendance-tracker-v8\HRTimeTracking.Api\bin\Debug\net1
 D:\BPO-Projects\hr-break-attendance-tracker-v8\HRTimeTracking.Api\bin\Debug\net10.0\appsettings.json
 D:\BPO-Projects\hr-break-attendance-tracker-v8\HRTimeTracking.Api\bin\Debug\net10.0\HRTimeTracking.Api.staticwebassets.endpoints.json
 D:\BPO-Projects\hr-break-attendance-tracker-v8\HRTimeTracking.Api\bin\Debug\net10.0\HRTimeTracking.Api.staticwebassets.runtime.json
-D:\BPO-Projects\hr-break-attendance-tracker-v8\HRTimeTracking.Api\bin\Debug\net10.0\HRTimeTracking.Api.exe
 D:\BPO-Projects\hr-break-attendance-tracker-v8\HRTimeTracking.Api\bin\Debug\net10.0\HRTimeTracking.Api.deps.json
 D:\BPO-Projects\hr-break-attendance-tracker-v8\HRTimeTracking.Api\bin\Debug\net10.0\HRTimeTracking.Api.runtimeconfig.json
 D:\BPO-Projects\hr-break-attendance-tracker-v8\HRTimeTracking.Api\bin\Debug\net10.0\HRTimeTracking.Api.dll

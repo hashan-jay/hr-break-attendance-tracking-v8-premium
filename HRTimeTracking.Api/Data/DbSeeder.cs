@@ -194,7 +194,7 @@ public static class DbSeeder
                     EndTime = new TimeOnly(17, 0),
                     SpansNextDay = false,
                     IsActive = true,
-                    CreatedAt = DateTime.UtcNow
+                    CreatedAt = TimeDisplay.NowLocal()
                 },
                 new Shift
                 {
@@ -203,7 +203,7 @@ public static class DbSeeder
                     EndTime = new TimeOnly(8, 0),
                     SpansNextDay = true,
                     IsActive = true,
-                    CreatedAt = DateTime.UtcNow
+                    CreatedAt = TimeDisplay.NowLocal()
                 });
             await db.SaveChangesAsync();
         }
@@ -212,20 +212,20 @@ public static class DbSeeder
         {
             var departments = new[]
             {
-                new Department { Name = "Human Resources", Description = "HR and people operations", CreatedAt = DateTime.UtcNow },
-                new Department { Name = "Finance", Description = "Accounts and finance", CreatedAt = DateTime.UtcNow },
-                new Department { Name = "Operations", Description = "Day-to-day operations", CreatedAt = DateTime.UtcNow },
-                new Department { Name = "IT", Description = "Information technology", CreatedAt = DateTime.UtcNow }
+                new Department { Name = "Human Resources", Description = "HR and people operations", CreatedAt = TimeDisplay.NowLocal() },
+                new Department { Name = "Finance", Description = "Accounts and finance", CreatedAt = TimeDisplay.NowLocal() },
+                new Department { Name = "Operations", Description = "Day-to-day operations", CreatedAt = TimeDisplay.NowLocal() },
+                new Department { Name = "IT", Description = "Information technology", CreatedAt = TimeDisplay.NowLocal() }
             };
             db.Departments.AddRange(departments);
             await db.SaveChangesAsync();
 
             db.Employees.AddRange(
-                new Employee { EmployeeCode = "EMP001", FullName = "Aisha Fernando", DepartmentId = departments[0].Id, HireDate = DateTime.UtcNow, CreatedAt = DateTime.UtcNow },
-                new Employee { EmployeeCode = "EMP002", FullName = "Nuwan Perera", DepartmentId = departments[1].Id, HireDate = DateTime.UtcNow, CreatedAt = DateTime.UtcNow },
-                new Employee { EmployeeCode = "EMP003", FullName = "Sajith Silva", DepartmentId = departments[2].Id, HireDate = DateTime.UtcNow, CreatedAt = DateTime.UtcNow },
-                new Employee { EmployeeCode = "EMP004", FullName = "Dilani Jayasuriya", DepartmentId = departments[3].Id, HireDate = DateTime.UtcNow, CreatedAt = DateTime.UtcNow },
-                new Employee { EmployeeCode = "EMP005", FullName = "Kasun Bandara", DepartmentId = departments[2].Id, HireDate = DateTime.UtcNow, CreatedAt = DateTime.UtcNow }
+                new Employee { EmployeeCode = "EMP001", FullName = "Aisha Fernando", DepartmentId = departments[0].Id, HireDate = TimeDisplay.NowLocal(), CreatedAt = TimeDisplay.NowLocal() },
+                new Employee { EmployeeCode = "EMP002", FullName = "Nuwan Perera", DepartmentId = departments[1].Id, HireDate = TimeDisplay.NowLocal(), CreatedAt = TimeDisplay.NowLocal() },
+                new Employee { EmployeeCode = "EMP003", FullName = "Sajith Silva", DepartmentId = departments[2].Id, HireDate = TimeDisplay.NowLocal(), CreatedAt = TimeDisplay.NowLocal() },
+                new Employee { EmployeeCode = "EMP004", FullName = "Dilani Jayasuriya", DepartmentId = departments[3].Id, HireDate = TimeDisplay.NowLocal(), CreatedAt = TimeDisplay.NowLocal() },
+                new Employee { EmployeeCode = "EMP005", FullName = "Kasun Bandara", DepartmentId = departments[2].Id, HireDate = TimeDisplay.NowLocal(), CreatedAt = TimeDisplay.NowLocal() }
             );
             await db.SaveChangesAsync();
         }
@@ -256,7 +256,7 @@ public static class DbSeeder
             UserName = userName,
             FullName = fullName,
             IsActive = true,
-            CreatedAt = DateTime.UtcNow
+            CreatedAt = TimeDisplay.NowLocal()
         };
 
         var result = await userManager.CreateAsync(user, password);

@@ -18,7 +18,7 @@ public class BreakTimeAdjustment
     public int AdjustmentMinutes { get; set; }
     public int AttemptsUsed { get; set; }
     public string? UpdatedByUserId { get; set; }
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime CreatedAt { get; set; } = HRTimeTracking.Api.Services.TimeDisplay.NowLocal();
     public DateTime? UpdatedAt { get; set; }
 }
 

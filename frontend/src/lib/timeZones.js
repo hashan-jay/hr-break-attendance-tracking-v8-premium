@@ -24,7 +24,7 @@ export const VIEW_TIME_ZONES = [
 
 const zoneById = new Map(VIEW_TIME_ZONES.map((zone) => [zone.id, zone]));
 
-let activeZoneId = readStoredZone();
+let activeZoneId = STORAGE_TIME_ZONE;
 
 export function ianaZone(id = activeZoneId) {
   const zone = zoneById.get(id);
@@ -40,23 +40,17 @@ export function getViewTimeZoneInfo() {
   return zoneById.get(activeZoneId) || zoneById.get(STORAGE_TIME_ZONE);
 }
 
-export function setActiveTimeZone(id) {
-  activeZoneId = zoneById.has(id) ? id : STORAGE_TIME_ZONE;
+export function setActiveTimeZone() {
+  activeZoneId = STORAGE_TIME_ZONE;
   return activeZoneId;
 }
 
 export function readStoredZone() {
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (zoneById.has(saved)) return saved;
-  } catch {
-    /* ignore */
-  }
   return STORAGE_TIME_ZONE;
 }
 
-export function persistTimeZone(id) {
-  const next = setActiveTimeZone(id);
+export function persistTimeZone() {
+  const next = setActiveTimeZone();
   try {
     localStorage.setItem(STORAGE_KEY, next);
   } catch {

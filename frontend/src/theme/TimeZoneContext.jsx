@@ -1,19 +1,18 @@
 import { createContext, useContext, useMemo, useState } from 'react';
-import { getViewTimeZone, persistTimeZone, setActiveTimeZone, STORAGE_TIME_ZONE } from '../lib/timeZones';
+import { persistTimeZone, setActiveTimeZone, STORAGE_TIME_ZONE } from '../lib/timeZones';
 
 const TimeZoneContext = createContext(null);
 
 export function TimeZoneProvider({ children }) {
   const [zoneId, setZoneId] = useState(() => {
-    const initial = getViewTimeZone();
-    setActiveTimeZone(initial);
-    return initial;
+    setActiveTimeZone();
+    return STORAGE_TIME_ZONE;
   });
 
   const value = useMemo(() => ({
     zoneId,
-    setTimeZone(next) {
-      const saved = persistTimeZone(next);
+    setTimeZone() {
+      const saved = persistTimeZone();
       setZoneId(saved);
     },
   }), [zoneId]);

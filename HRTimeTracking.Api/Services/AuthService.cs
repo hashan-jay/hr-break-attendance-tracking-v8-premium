@@ -29,7 +29,8 @@ public class JwtTokenService : IJwtTokenService
         var audience = jwt["Audience"] ?? "HRTimeTracking";
         var expiresMinutes = int.TryParse(jwt["ExpiresMinutes"], out var m) ? m : 480;
 
-        var expiresAt = DateTime.UtcNow.AddMinutes(expiresMinutes);
+        var expiresAtUtc = DateTime.UtcNow.AddMinutes(expiresMinutes);
+        var expiresAt = TimeDisplay.NowLocal().AddMinutes(expiresMinutes);
         var claims = new List<Claim>
         {
             new(JwtRegisteredClaimNames.Sub, user.Id),
@@ -50,7 +51,7 @@ public class JwtTokenService : IJwtTokenService
             issuer: issuer,
             audience: audience,
             claims: claims,
-            expires: expiresAt,
+            expires: expiresAtUtc,
             signingCredentials: credentials);
 
         return (new JwtSecurityTokenHandler().WriteToken(token), expiresAt);
@@ -100,7 +101,7 @@ public class AuthService : IAuthService
         var permissions = await _permissions.GetForUserAsync(user.Id);
         var (token, expiresAt) = _jwtTokenService.CreateToken(user, roles);
 
-        user.LastLoginAt = DateTime.UtcNow;
+        user.LastLoginAt = TimeDisplay.NowLocal();
         await _userManager.UpdateAsync(user);
         await _auditService.LogAsync(user.Id, "Login", "User", user.Id, $"User '{user.UserName}' logged in.");
 

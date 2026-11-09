@@ -117,7 +117,7 @@ public class ShiftService : IShiftService
             EndTime = parsed.End,
             SpansNextDay = parsed.SpansNextDay,
             IsActive = request.IsActive,
-            CreatedAt = DateTime.UtcNow
+            CreatedAt = TimeDisplay.NowLocal()
         };
         _db.Shifts.Add(entity);
         await _db.SaveChangesAsync();
@@ -149,7 +149,7 @@ public class ShiftService : IShiftService
         entity.EndTime = parsed.End;
         entity.SpansNextDay = parsed.SpansNextDay;
         entity.IsActive = request.IsActive;
-        entity.UpdatedAt = DateTime.UtcNow;
+        entity.UpdatedAt = TimeDisplay.NowLocal();
         await _db.SaveChangesAsync();
         await _audit.LogAsync(userId, "Update", "Shift", entity.Id.ToString(),
             $"Updated shift '{entity.Name}' {FormatMilitary(entity.StartTime)}-{FormatMilitary(entity.EndTime)}" +
@@ -165,7 +165,7 @@ public class ShiftService : IShiftService
         if (!entity.IsActive) return (false, "Shift is already inactive.");
 
         entity.IsActive = false;
-        entity.UpdatedAt = DateTime.UtcNow;
+        entity.UpdatedAt = TimeDisplay.NowLocal();
         await _db.SaveChangesAsync();
         await _audit.LogAsync(userId, "Deactivate", "Shift", entity.Id.ToString(), $"Deactivated shift '{entity.Name}'.");
         await _liveUpdates.NotifyAsync("shifts");

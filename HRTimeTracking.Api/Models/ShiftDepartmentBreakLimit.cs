@@ -23,7 +23,7 @@ public class ShiftDepartmentBreakLimit
 
     public int ComfortBreakLimitMinutes { get; set; } = BreakStatusCodes.DefaultComfortLimitMinutes;
 
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime CreatedAt { get; set; } = HRTimeTracking.Api.Services.TimeDisplay.NowLocal();
 
     public DateTime? UpdatedAt { get; set; }
 }

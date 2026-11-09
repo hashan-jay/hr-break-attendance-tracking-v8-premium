@@ -65,7 +65,7 @@ public class UserAdminService : IUserAdminService
             UserName = userName,
             FullName = request.FullName.Trim(),
             IsActive = true,
-            CreatedAt = DateTime.UtcNow
+            CreatedAt = TimeDisplay.NowLocal()
         };
 
         var create = await _userManager.CreateAsync(user, request.Password);
@@ -386,7 +386,7 @@ public class SettingsService : ISettingsService
         var previousComfortStarts = department.ComfortBreakStartLimit;
         department.MealBreakStartLimit = mealStartLimit;
         department.ComfortBreakStartLimit = comfortStartLimit;
-        department.UpdatedAt = DateTime.UtcNow;
+        department.UpdatedAt = TimeDisplay.NowLocal();
         await _db.SaveChangesAsync();
         await _audit.LogAsync(userId, "Update", "DepartmentStartLimits", department.Id.ToString(),
             $"Updated start limits for '{department.Name}': Meal starts {previousMealStarts} → {mealStartLimit}, Comfort starts {previousComfortStarts} → {comfortStartLimit}.");
@@ -470,7 +470,7 @@ public class SettingsService : ISettingsService
                     ComfortBreakStartLimit = ClampStartLimit(department.ComfortBreakStartLimit, comfortDefault),
                     MealBreakLimitMinutes = mealMinutes,
                     ComfortBreakLimitMinutes = comfortMinutes,
-                    CreatedAt = DateTime.UtcNow
+                    CreatedAt = TimeDisplay.NowLocal()
                 });
                 added = true;
             }
@@ -582,7 +582,7 @@ public class SettingsService : ISettingsService
         row.ComfortBreakStartLimit = comfortStartLimit;
         row.MealBreakLimitMinutes = mealLimitMinutes;
         row.ComfortBreakLimitMinutes = comfortLimitMinutes;
-        row.UpdatedAt = DateTime.UtcNow;
+        row.UpdatedAt = TimeDisplay.NowLocal();
         await _db.SaveChangesAsync();
 
         var employeeCount = await _db.Employees.CountAsync(e =>

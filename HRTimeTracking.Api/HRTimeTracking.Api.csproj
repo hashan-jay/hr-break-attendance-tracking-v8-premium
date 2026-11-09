@@ -4,8 +4,8 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <!-- Avoid MSB3027 file-lock failures when dotnet watch rebuilds on Windows. -->
-    <UseAppHost>true</UseAppHost>
+    <!-- Do not emit HRTimeTracking.Api.exe. Windows Application Control blocks that new host; dotnet watch then runs through the shared dotnet host. -->
+    <UseAppHost>false</UseAppHost>
     <!-- Model/EF changes cannot be hot-reloaded; restart instead of leaving a broken process. -->
     <HotReloadAutoRestart>true</HotReloadAutoRestart>
     <InterceptorsNamespaces>$(InterceptorsNamespaces);Microsoft.AspNetCore.OpenApi.Generated</InterceptorsNamespaces>

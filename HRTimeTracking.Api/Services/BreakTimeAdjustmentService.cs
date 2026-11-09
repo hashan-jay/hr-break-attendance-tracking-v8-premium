@@ -144,7 +144,7 @@ public class BreakTimeAdjustmentService : IBreakTimeAdjustmentService
                 EmployeeId = request.EmployeeId,
                 BreakDate = request.Date,
                 BreakType = breakType,
-                CreatedAt = DateTime.UtcNow,
+                CreatedAt = TimeDisplay.NowLocal(),
             };
             _db.BreakTimeAdjustments.Add(existing);
         }
@@ -152,7 +152,7 @@ public class BreakTimeAdjustmentService : IBreakTimeAdjustmentService
         existing.AdjustmentMinutes = newMinutes;
         existing.AttemptsUsed += 1;
         existing.UpdatedByUserId = userId;
-        existing.UpdatedAt = DateTime.UtcNow;
+        existing.UpdatedAt = TimeDisplay.NowLocal();
         await BreakStartOffsetSync.SyncAsync(_db, request.EmployeeId, request.Date, breakType, newMinutes);
         await _db.SaveChangesAsync();
 

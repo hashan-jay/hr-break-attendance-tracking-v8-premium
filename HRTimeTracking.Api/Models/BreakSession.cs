@@ -36,7 +36,7 @@ public class BreakSession
     /// <summary>True when the session was closed automatically at shift end.</summary>
     public bool IsAutoClosed { get; set; }
 
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime CreatedAt { get; set; } = HRTimeTracking.Api.Services.TimeDisplay.NowLocal();
 
     public bool IsOpen => InTime is null;
 }

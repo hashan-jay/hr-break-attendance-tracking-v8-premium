@@ -30,7 +30,7 @@ public class AuditService : IAuditService
                 EntityId = entityId,
                 Details = details is { Length: > 2000 } ? details[..2000] : details,
                 IpAddress = ipAddress,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = TimeDisplay.NowLocal()
             });
             await _db.SaveChangesAsync();
         }

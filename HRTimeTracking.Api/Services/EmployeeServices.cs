@@ -83,7 +83,7 @@ public class DepartmentService : IDepartmentService
         {
             Name = name,
             Description = request.Description?.Trim(),
-            CreatedAt = DateTime.UtcNow,
+            CreatedAt = TimeDisplay.NowLocal(),
             MealBreakStartLimit = await _settings.GetMealStartLimitAsync(),
             ComfortBreakStartLimit = await _settings.GetComfortStartLimitAsync()
         };
@@ -107,7 +107,7 @@ public class DepartmentService : IDepartmentService
 
         entity.Name = name;
         entity.Description = request.Description?.Trim();
-        entity.UpdatedAt = DateTime.UtcNow;
+        entity.UpdatedAt = TimeDisplay.NowLocal();
         await _db.SaveChangesAsync();
         await _audit.LogAsync(userId, "Update", "Department", entity.Id.ToString(), $"Updated department '{entity.Name}'.");
         await _liveUpdates.NotifyAsync("departments");
@@ -125,8 +125,8 @@ public class DepartmentService : IDepartmentService
             return (false, "Cannot delete a department that still has active employees. Move or deactivate those employees first.");
 
         entity.IsDeleted = true;
-        entity.DeletedAt = DateTime.UtcNow;
-        entity.UpdatedAt = DateTime.UtcNow;
+        entity.DeletedAt = TimeDisplay.NowLocal();
+        entity.UpdatedAt = TimeDisplay.NowLocal();
         await _db.SaveChangesAsync();
         await _audit.LogAsync(userId, "Delete", "Department", entity.Id.ToString(), $"Deleted department '{entity.Name}'.");
         await _liveUpdates.NotifyAsync("departments");
@@ -141,7 +141,7 @@ public class DepartmentService : IDepartmentService
 
         entity.IsDeleted = false;
         entity.DeletedAt = null;
-        entity.UpdatedAt = DateTime.UtcNow;
+        entity.UpdatedAt = TimeDisplay.NowLocal();
         await _db.SaveChangesAsync();
         await _audit.LogAsync(userId, "Recover", "Department", entity.Id.ToString(), $"Recovered department '{entity.Name}'.");
         await _liveUpdates.NotifyAsync("departments");
@@ -249,8 +249,8 @@ public class EmployeeService : IEmployeeService
             FullName = request.FullName.Trim(),
             DepartmentId = request.DepartmentId,
             ShiftId = request.ShiftId,
-            HireDate = DateTime.UtcNow,
-            CreatedAt = DateTime.UtcNow
+            HireDate = TimeDisplay.NowLocal(),
+            CreatedAt = TimeDisplay.NowLocal()
         };
         _db.Employees.Add(entity);
         await _db.SaveChangesAsync();
@@ -284,7 +284,7 @@ public class EmployeeService : IEmployeeService
         entity.DepartmentId = request.DepartmentId;
         entity.ShiftId = request.ShiftId;
         entity.HireDate = request.HireDate;
-        entity.UpdatedAt = DateTime.UtcNow;
+        entity.UpdatedAt = TimeDisplay.NowLocal();
         try
         {
             await _db.SaveChangesAsync();
@@ -347,8 +347,8 @@ public class EmployeeService : IEmployeeService
         var closedBreaks = await CloseOpenBreaksAsync(id, userId);
 
         entity.IsDeleted = true;
-        entity.DeletedAt = DateTime.UtcNow;
-        entity.UpdatedAt = DateTime.UtcNow;
+        entity.DeletedAt = TimeDisplay.NowLocal();
+        entity.UpdatedAt = TimeDisplay.NowLocal();
         await _db.SaveChangesAsync();
 
         var details = closedBreaks > 0
@@ -369,7 +369,7 @@ public class EmployeeService : IEmployeeService
 
         entity.IsDeleted = false;
         entity.DeletedAt = null;
-        entity.UpdatedAt = DateTime.UtcNow;
+        entity.UpdatedAt = TimeDisplay.NowLocal();
         await _db.SaveChangesAsync();
         await _audit.LogAsync(userId, "Activate", "Employee", entity.Id.ToString(),
             $"Activated employee '{entity.FullName}' ({entity.EmployeeCode}).");

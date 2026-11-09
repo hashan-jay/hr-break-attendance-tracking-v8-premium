@@ -29,9 +29,9 @@ public class Employee
 
     public DateTime? DeletedAt { get; set; }
 
-    public DateTime HireDate { get; set; } = DateTime.UtcNow;
+    public DateTime HireDate { get; set; } = HRTimeTracking.Api.Services.TimeDisplay.NowLocal();
 
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime CreatedAt { get; set; } = HRTimeTracking.Api.Services.TimeDisplay.NowLocal();
 
     public DateTime? UpdatedAt { get; set; }
 

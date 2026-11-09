@@ -67,19 +67,9 @@ public static class TimeDisplay
     public static DateTime? AsLocal(DateTime? value) => value.HasValue ? AsLocal(value.Value) : null;
 
     /// <summary>
-    /// Audit / Identity timestamps are written with <see cref="DateTime.UtcNow"/>.
-    /// SQL Server returns them as Unspecified, so convert explicitly UTC → local.
+    /// Stored timestamps are Colombo wall-clock values. Do not add +05:30 again on read.
     /// </summary>
-    public static DateTime FromStoredUtc(DateTime value)
-    {
-        var utc = value.Kind switch
-        {
-            DateTimeKind.Utc => value,
-            DateTimeKind.Local => TimeZoneInfo.ConvertTimeToUtc(DateTime.SpecifyKind(value, DateTimeKind.Unspecified), Colombo),
-            _ => DateTime.SpecifyKind(value, DateTimeKind.Utc)
-        };
-        return DateTime.SpecifyKind(TimeZoneInfo.ConvertTimeFromUtc(utc, Colombo), DateTimeKind.Unspecified);
-    }
+    public static DateTime FromStoredUtc(DateTime value) => AsLocal(value);
 
     /// <summary>
     /// Exact whole seconds between two local timestamps (floor of elapsed ticks).
