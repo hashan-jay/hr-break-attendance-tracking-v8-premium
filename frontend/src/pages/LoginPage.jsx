@@ -32,15 +32,17 @@ export default function LoginPage() {
 
   return (
     <div className="app-portal login-screen login-screen--ig">
+      <div className="login-aurora" aria-hidden="true">
+        <span className="login-aurora__orb login-aurora__orb--green" />
+        <span className="login-aurora__orb login-aurora__orb--amber" />
+        <span className="login-aurora__orb login-aurora__orb--deep" />
+      </div>
       <div className="login-theme-toggle">
         <ThemeToggle variant="circle" />
       </div>
       <div className="login-ig">
         <section className="login-ig__card">
           <div className="login-ig__brand">
-            <span className="login-ig__mark" aria-hidden="true">
-              <span />
-            </span>
             <p className="login-ig__wordmark">Employee Break &amp; Attendance Tracker</p>
             <p className="login-ig__subbrand">PortCity BPO · HTSK Division</p>
           </div>

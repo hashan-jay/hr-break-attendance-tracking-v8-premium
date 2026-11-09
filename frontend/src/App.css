@@ -6126,12 +6126,87 @@ html[data-theme="dark"] .onbreak-now__timer {
 
 .app-portal.login-screen.login-screen--ig {
   font-family: "Montserrat", "Segoe UI", sans-serif;
+  isolation: isolate;
   background:
-    radial-gradient(42rem 28rem at 12% -10%, rgba(34, 197, 94, 0.55), transparent 62%),
-    radial-gradient(36rem 26rem at 110% 8%, rgba(251, 146, 60, 0.48), transparent 58%),
-    radial-gradient(28rem 22rem at 70% 120%, rgba(20, 84, 45, 0.35), transparent 60%),
-    linear-gradient(165deg, #ecfdf3 0%, #fff7ed 48%, #ffedd5 100%);
+    radial-gradient(42rem 28rem at 12% -10%, rgba(34, 197, 94, 0.28), transparent 62%),
+    radial-gradient(36rem 26rem at 110% 8%, rgba(251, 146, 60, 0.22), transparent 58%),
+    linear-gradient(165deg, #f4fbf6 0%, #fffaf4 52%, #fff4e8 100%);
   background-attachment: fixed;
+}
+
+.login-screen--ig .login-aurora {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.login-screen--ig .login-aurora__orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(18px);
+  opacity: 0.85;
+  will-change: transform;
+}
+
+.login-screen--ig .login-aurora__orb--green {
+  width: 38rem;
+  height: 38rem;
+  left: -12rem;
+  top: -10rem;
+  background: radial-gradient(circle, rgba(74, 222, 128, 0.85), rgba(74, 222, 128, 0) 68%);
+  animation: login-drift-green 18s ease-in-out infinite;
+}
+
+.login-screen--ig .login-aurora__orb--amber {
+  width: 34rem;
+  height: 34rem;
+  right: -10rem;
+  top: 8%;
+  background: radial-gradient(circle, rgba(251, 146, 60, 0.72), rgba(251, 146, 60, 0) 70%);
+  animation: login-drift-amber 22s ease-in-out infinite;
+}
+
+.login-screen--ig .login-aurora__orb--deep {
+  width: 28rem;
+  height: 28rem;
+  left: 32%;
+  bottom: -12rem;
+  background: radial-gradient(circle, rgba(20, 84, 45, 0.38), rgba(20, 84, 45, 0) 70%);
+  animation: login-drift-deep 26s ease-in-out infinite;
+}
+
+.login-screen--ig .login-ig {
+  position: relative;
+  z-index: 1;
+}
+
+.login-screen--ig .portal-credits--page,
+.login-screen--ig .login-theme-toggle {
+  z-index: 2;
+}
+
+@keyframes login-drift-green {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(8rem, 6rem, 0) scale(1.12); }
+}
+
+@keyframes login-drift-amber {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(-7rem, 8rem, 0) scale(1.08); }
+}
+
+@keyframes login-drift-deep {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(-5rem, -6rem, 0) scale(1.16); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .login-screen--ig .login-aurora__orb,
+  .login-screen--ig .login-form .btn-primary:hover:not(:disabled)::after {
+    animation: none;
+  }
 }
 
 .login-ig {
@@ -6162,30 +6237,28 @@ html[data-theme="dark"] .onbreak-now__timer {
   background: linear-gradient(90deg, #14542d, #22c55e 45%, #fb923c);
 }
 
+.login-ig__card--meta::before {
+  display: none;
+}
+
+.login-screen--ig .login-form label {
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.78rem;
+  font-weight: 650;
+  color: #737373;
+  transition: color 0.18s ease;
+}
+
+.login-screen--ig .login-form label:focus-within {
+  color: #14542d;
+}
+
 .login-ig__brand {
   display: grid;
   justify-items: center;
   gap: 0.4rem;
   margin-bottom: 1.2rem;
-}
-
-.login-ig__mark {
-  display: grid;
-  place-items: center;
-  width: 3rem;
-  height: 3rem;
-  margin-bottom: 0.25rem;
-  border-radius: 1rem;
-  background: linear-gradient(160deg, #166534, #052e16);
-  box-shadow: 0 10px 22px rgba(20, 84, 45, 0.28);
-}
-
-.login-ig__mark span {
-  width: 1.15rem;
-  height: 1.15rem;
-  border-radius: 999px;
-  border: 2px solid #bbf7d0;
-  box-shadow: 7px -7px 0 -5px #fdba74;
 }
 
 .login-ig__wordmark {
@@ -6246,34 +6319,28 @@ html[data-theme="dark"] .onbreak-now__timer {
   text-align: center;
 }
 
-.login-screen--ig .login-form label {
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: #737373;
-}
-
 .login-screen--ig .login-form input {
-  border: 1px solid rgba(16, 38, 26, 0.1);
+  border: 1px solid rgba(16, 38, 26, 0.12);
   border-radius: 0.95rem;
-  min-height: 2.9rem;
+  min-height: 3rem;
   padding: 0.75rem 1rem;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.92);
   color: #10261a;
   font-family: "Montserrat", "Segoe UI", sans-serif;
-  transition: box-shadow 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
 }
 
 .login-screen--ig .login-form input:hover {
-  border-color: rgba(20, 84, 45, 0.35);
-  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.06);
+  border-color: rgba(20, 84, 45, 0.4);
+  background: #fff;
 }
 
 .login-screen--ig .login-form input:focus {
   outline: none;
-  transform: none;
+  transform: translateY(-1px);
   border-color: #14542d;
   background: #fff;
-  box-shadow: 0 0 0 3px rgba(20, 84, 45, 0.16);
+  box-shadow: 0 0 0 4px rgba(20, 84, 45, 0.14), 0 10px 24px rgba(20, 84, 45, 0.08);
 }
 
 .login-screen--ig .login-form .password-toggle:hover {
@@ -6283,6 +6350,8 @@ html[data-theme="dark"] .onbreak-now__timer {
 
 .login-ig__submit,
 .login-screen--ig .login-form .btn-primary {
+  position: relative;
+  overflow: hidden;
   width: 100%;
   margin-top: 0.45rem;
   min-height: 3rem;
@@ -6298,8 +6367,28 @@ html[data-theme="dark"] .onbreak-now__timer {
   transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
 }
 
+.login-ig__submit::after,
+.login-screen--ig .login-form .btn-primary::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 20%, rgba(255, 255, 255, 0.28) 48%, transparent 76%);
+  transform: translateX(-130%);
+  pointer-events: none;
+}
+
+.login-screen--ig .login-form .btn-primary:hover:not(:disabled)::after {
+  animation: login-sheen 0.7s ease;
+}
+
+@keyframes login-sheen {
+  to { transform: translateX(130%); }
+}
+
 .login-screen--ig .login-form .btn-primary:hover:not(:disabled) {
-  filter: brightness(1.06);
+  background: linear-gradient(180deg, #1f8a4c, #104525);
+  color: #fff;
+  filter: none;
   transform: translateY(-2px);
   box-shadow: 0 16px 28px rgba(20, 84, 45, 0.32);
 }
@@ -6313,8 +6402,18 @@ html[data-theme="dark"] .onbreak-now__timer {
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 0.45rem;
-  padding: 1.05rem 1.25rem;
+  gap: 0.55rem 0.75rem;
+  padding: 0.9rem 1.1rem;
+}
+
+.login-ig__back::after {
+  content: "→";
+  font-size: 0.95rem;
+  transition: transform 0.18s ease;
+}
+
+.login-ig__back:hover::after {
+  transform: translateX(3px);
 }
 
 .login-ig__card--meta p {
@@ -6326,8 +6425,9 @@ html[data-theme="dark"] .onbreak-now__timer {
 .login-ig__back {
   display: inline-flex;
   align-items: center;
-  padding: 0.4rem 0.85rem;
-  border-radius: 999px;
+  gap: 0.4rem;
+  padding: 0.5rem 0.85rem;
+  border-radius: 0.8rem;
   border: 1px solid #14542d;
   background: #fff;
   font-size: 0.82rem;
@@ -6348,24 +6448,38 @@ html[data-theme="dark"] .onbreak-now__timer {
 
 html[data-theme="dark"] .app-portal.login-screen.login-screen--ig {
   background:
-    radial-gradient(40rem 26rem at 8% -8%, rgba(34, 197, 94, 0.28), transparent 60%),
-    radial-gradient(34rem 24rem at 108% 0%, rgba(234, 88, 12, 0.32), transparent 58%),
-    radial-gradient(26rem 20rem at 60% 120%, rgba(20, 84, 45, 0.4), transparent 62%),
-    #070b09;
+    radial-gradient(40rem 26rem at 8% -8%, rgba(34, 197, 94, 0.12), transparent 60%),
+    linear-gradient(180deg, #070b09, #0c1210 60%, #10140f);
   background-attachment: fixed;
 }
 
-html[data-theme="dark"] .login-ig__card {
-  background: rgba(14, 18, 16, 0.78);
-  border-color: rgba(255, 255, 255, 0.1);
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.06) inset,
-    0 28px 70px rgba(0, 0, 0, 0.45);
+html[data-theme="dark"] .login-screen--ig .login-aurora__orb--green {
+  background: radial-gradient(circle, rgba(34, 197, 94, 0.55), rgba(34, 197, 94, 0) 68%);
 }
 
-html[data-theme="dark"] .login-ig__mark {
-  background: linear-gradient(160deg, #22c55e, #14532d);
-  box-shadow: 0 10px 24px rgba(34, 197, 94, 0.25);
+html[data-theme="dark"] .login-screen--ig .login-aurora__orb--amber {
+  background: radial-gradient(circle, rgba(234, 88, 12, 0.48), rgba(234, 88, 12, 0) 70%);
+}
+
+html[data-theme="dark"] .login-screen--ig .login-aurora__orb--deep {
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.28), rgba(16, 185, 129, 0) 70%);
+}
+
+html[data-theme="dark"] .login-ig__card {
+  background: rgba(12, 16, 14, 0.88);
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.06) inset,
+    0 28px 70px rgba(0, 0, 0, 0.55);
+}
+
+html[data-theme="dark"] .login-ig__card--meta {
+  background: rgba(8, 12, 10, 0.72);
+}
+
+html[data-theme="dark"] .login-screen .portal-credits--page {
+  color: #b7c2bc;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.65);
 }
 
 html[data-theme="dark"] .login-ig__wordmark,
@@ -6387,20 +6501,34 @@ html[data-theme="dark"] .login-form__error {
 }
 
 html[data-theme="dark"] .login-screen--ig .login-form input {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.1);
-  color: #f5f5f5;
+  background: #121816;
+  border-color: rgba(255, 255, 255, 0.16);
+  color: #f4f7f5;
+}
+
+html[data-theme="dark"] .login-screen--ig .login-form label:focus-within {
+  color: #86efac;
+}
+
+html[data-theme="dark"] .login-screen--ig .login-form input:hover {
+  border-color: rgba(134, 239, 172, 0.45);
+  background: rgba(255, 255, 255, 0.07);
 }
 
 html[data-theme="dark"] .login-screen--ig .login-form input:focus {
+  transform: translateY(-1px);
   border-color: #86efac;
   background: rgba(255, 255, 255, 0.08);
-  box-shadow: 0 0 0 3px rgba(134, 239, 172, 0.18);
+  box-shadow: 0 0 0 4px rgba(134, 239, 172, 0.16), 0 12px 28px rgba(0, 0, 0, 0.28);
+}
+
+html[data-theme="dark"] .login-screen--ig .login-form .password-toggle {
+  color: #d4d4d4;
 }
 
 html[data-theme="dark"] .login-screen--ig .login-form .password-toggle:hover {
   background: rgba(255, 255, 255, 0.08);
-  color: #fdba74;
+  color: #86efac;
 }
 
 html[data-theme="dark"] .login-ig__submit,
@@ -6411,23 +6539,26 @@ html[data-theme="dark"] .login-screen--ig .login-form .btn-primary {
 }
 
 html[data-theme="dark"] .login-screen--ig .login-form .btn-primary:hover:not(:disabled) {
-  filter: brightness(1.05);
+  background: linear-gradient(180deg, #6ee7b7, #10b981);
+  color: #052e16;
+  filter: none;
   transform: translateY(-2px);
-  box-shadow: 0 16px 30px rgba(16, 185, 129, 0.3);
+  box-shadow: 0 16px 30px rgba(16, 185, 129, 0.35);
 }
 
 
 html[data-theme="dark"] .login-ig__back {
-  background: transparent;
-  border-color: #c2410c;
-  color: #fdba74;
+  background: rgba(16, 185, 129, 0.08);
+  border-color: rgba(52, 211, 153, 0.55);
+  color: #6ee7b7;
 }
 
 html[data-theme="dark"] .login-ig__back:hover {
-  background: #c2410c;
-  color: #fff;
+  background: #059669;
+  border-color: #059669;
+  color: #052e16;
   transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(194, 65, 12, 0.28);
+  box-shadow: 0 10px 20px rgba(16, 185, 129, 0.28);
 }
 
 .login-form {
