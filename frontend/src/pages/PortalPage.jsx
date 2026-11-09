@@ -653,6 +653,11 @@ export default function PortalPage() {
 
   return (
     <div className="portal-shell">
+      <div className="login-aurora" aria-hidden="true">
+        <span className="login-aurora__orb login-aurora__orb--green" />
+        <span className="login-aurora__orb login-aurora__orb--amber" />
+        <span className="login-aurora__orb login-aurora__orb--deep" />
+      </div>
       <main className="portal-main">
         <header className="portal-employee-header">
           <div className="portal-employee-header__brand">

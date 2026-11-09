@@ -4,7 +4,13 @@
   height: 100vh;
   max-height: 100vh;
   overflow: hidden;
-  background: var(--portal-canvas);
+  position: relative;
+  isolation: isolate;
+  background:
+    radial-gradient(42rem 28rem at 12% -10%, rgba(34, 197, 94, 0.28), transparent 62%),
+    radial-gradient(36rem 26rem at 110% 8%, rgba(251, 146, 60, 0.22), transparent 58%),
+    linear-gradient(165deg, #f4fbf6 0%, #fffaf4 52%, #fff4e8 100%);
+  background-attachment: fixed;
 }
 
 .portal-side-desktop {
@@ -551,7 +557,7 @@ html[data-theme="dark"] .portal-logout:focus-visible {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  background: var(--portal-canvas);
+  background: transparent;
 }
 
 .portal-mobile-bar {
@@ -727,7 +733,13 @@ html[data-theme="dark"] .portal-mobile__handle {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   min-height: 100vh;
-  background: linear-gradient(160deg, #86efac 0%, #bbf7d0 32%, #fed7aa 68%, #fb923c 100%);
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    radial-gradient(42rem 28rem at 12% -10%, rgba(34, 197, 94, 0.28), transparent 62%),
+    radial-gradient(36rem 26rem at 110% 8%, rgba(251, 146, 60, 0.22), transparent 58%),
+    linear-gradient(165deg, #f4fbf6 0%, #fffaf4 52%, #fff4e8 100%);
   background-attachment: fixed;
   color: var(--ig-ink);
   font-family: var(--ig-font);
@@ -3255,10 +3267,17 @@ html[data-theme="dark"] .app-portal .main-panel {
     0 10px 24px rgba(0, 0, 0, 0.28);
 }
 
-html[data-theme="dark"] .app-shell,
 html[data-theme="dark"] .portal-side-desktop,
 html[data-theme="dark"] .portal-side {
   background: var(--portal-side);
+}
+
+html[data-theme="dark"] .app-shell,
+html[data-theme="dark"] .portal-shell {
+  background:
+    radial-gradient(40rem 26rem at 8% -8%, rgba(34, 197, 94, 0.12), transparent 60%),
+    linear-gradient(180deg, #070b09, #0c1210 60%, #10140f);
+  background-attachment: fixed;
 }
 
 html[data-theme="dark"] .app-portal {
@@ -6134,7 +6153,9 @@ html[data-theme="dark"] .onbreak-now__timer {
   background-attachment: fixed;
 }
 
-.login-screen--ig .login-aurora {
+.login-screen--ig .login-aurora,
+.portal-shell > .login-aurora,
+.app-shell > .login-aurora {
   position: absolute;
   inset: 0;
   overflow: hidden;
@@ -6142,7 +6163,9 @@ html[data-theme="dark"] .onbreak-now__timer {
   z-index: 0;
 }
 
-.login-screen--ig .login-aurora__orb {
+.login-screen--ig .login-aurora__orb,
+.portal-shell > .login-aurora .login-aurora__orb,
+.app-shell > .login-aurora .login-aurora__orb {
   position: absolute;
   border-radius: 50%;
   filter: blur(18px);
@@ -6150,7 +6173,9 @@ html[data-theme="dark"] .onbreak-now__timer {
   will-change: transform;
 }
 
-.login-screen--ig .login-aurora__orb--green {
+.login-screen--ig .login-aurora__orb--green,
+.portal-shell > .login-aurora .login-aurora__orb--green,
+.app-shell > .login-aurora .login-aurora__orb--green {
   width: 38rem;
   height: 38rem;
   left: -12rem;
@@ -6159,7 +6184,9 @@ html[data-theme="dark"] .onbreak-now__timer {
   animation: login-drift-green 18s ease-in-out infinite;
 }
 
-.login-screen--ig .login-aurora__orb--amber {
+.login-screen--ig .login-aurora__orb--amber,
+.portal-shell > .login-aurora .login-aurora__orb--amber,
+.app-shell > .login-aurora .login-aurora__orb--amber {
   width: 34rem;
   height: 34rem;
   right: -10rem;
@@ -6168,13 +6195,22 @@ html[data-theme="dark"] .onbreak-now__timer {
   animation: login-drift-amber 22s ease-in-out infinite;
 }
 
-.login-screen--ig .login-aurora__orb--deep {
+.login-screen--ig .login-aurora__orb--deep,
+.portal-shell > .login-aurora .login-aurora__orb--deep,
+.app-shell > .login-aurora .login-aurora__orb--deep {
   width: 28rem;
   height: 28rem;
   left: 32%;
   bottom: -12rem;
   background: radial-gradient(circle, rgba(20, 84, 45, 0.38), rgba(20, 84, 45, 0) 70%);
   animation: login-drift-deep 26s ease-in-out infinite;
+}
+
+.portal-shell > .portal-main,
+.app-shell > .portal-side-desktop,
+.app-shell > .portal-main-wrap {
+  position: relative;
+  z-index: 1;
 }
 
 .login-screen--ig .login-ig {
@@ -6204,6 +6240,8 @@ html[data-theme="dark"] .onbreak-now__timer {
 
 @media (prefers-reduced-motion: reduce) {
   .login-screen--ig .login-aurora__orb,
+  .portal-shell > .login-aurora .login-aurora__orb,
+  .app-shell > .login-aurora .login-aurora__orb,
   .login-screen--ig .login-form .btn-primary:hover:not(:disabled)::after {
     animation: none;
   }
@@ -6453,15 +6491,21 @@ html[data-theme="dark"] .app-portal.login-screen.login-screen--ig {
   background-attachment: fixed;
 }
 
-html[data-theme="dark"] .login-screen--ig .login-aurora__orb--green {
+html[data-theme="dark"] .login-screen--ig .login-aurora__orb--green,
+html[data-theme="dark"] .portal-shell > .login-aurora .login-aurora__orb--green,
+html[data-theme="dark"] .app-shell > .login-aurora .login-aurora__orb--green {
   background: radial-gradient(circle, rgba(34, 197, 94, 0.55), rgba(34, 197, 94, 0) 68%);
 }
 
-html[data-theme="dark"] .login-screen--ig .login-aurora__orb--amber {
+html[data-theme="dark"] .login-screen--ig .login-aurora__orb--amber,
+html[data-theme="dark"] .portal-shell > .login-aurora .login-aurora__orb--amber,
+html[data-theme="dark"] .app-shell > .login-aurora .login-aurora__orb--amber {
   background: radial-gradient(circle, rgba(234, 88, 12, 0.48), rgba(234, 88, 12, 0) 70%);
 }
 
-html[data-theme="dark"] .login-screen--ig .login-aurora__orb--deep {
+html[data-theme="dark"] .login-screen--ig .login-aurora__orb--deep,
+html[data-theme="dark"] .portal-shell > .login-aurora .login-aurora__orb--deep,
+html[data-theme="dark"] .app-shell > .login-aurora .login-aurora__orb--deep {
   background: radial-gradient(circle, rgba(16, 185, 129, 0.28), rgba(16, 185, 129, 0) 70%);
 }
 
@@ -9967,7 +10011,9 @@ html[data-theme="dark"] .portal-shell {
   --ig-canvas: #000000;
   --ig-card: #121212;
   --ig-shadow: 0 0 0 1px rgba(255, 255, 255, 0.04);
-  background: linear-gradient(160deg, #14532d 0%, #166534 28%, #c2410c 66%, #9a3412 100%);
+  background:
+    radial-gradient(40rem 26rem at 8% -8%, rgba(34, 197, 94, 0.12), transparent 60%),
+    linear-gradient(180deg, #070b09, #0c1210 60%, #10140f);
   background-attachment: fixed;
   color: var(--ig-ink);
 }

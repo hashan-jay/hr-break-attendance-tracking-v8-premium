@@ -308,6 +308,11 @@ export default function AppLayout() {
 
   return (
     <div className="app-portal app-shell">
+      <div className="login-aurora" aria-hidden="true">
+        <span className="login-aurora__orb login-aurora__orb--green" />
+        <span className="login-aurora__orb login-aurora__orb--amber" />
+        <span className="login-aurora__orb login-aurora__orb--deep" />
+      </div>
       <div className="portal-side-desktop">
         <StaffSidebar user={user} items={items} onLogout={onLogout} />
       </div>
