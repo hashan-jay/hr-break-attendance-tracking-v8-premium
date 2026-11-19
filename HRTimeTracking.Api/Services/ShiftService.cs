@@ -21,13 +21,21 @@ public class ShiftService : IShiftService
     private readonly IAuditService _audit;
     private readonly ISettingsService _settings;
     private readonly ILiveUpdateNotifier _liveUpdates;
+    private readonly IAttendanceAnalyticsCache _cache;
+    private static readonly TimeSpan ListCacheTtl = TimeSpan.FromMinutes(2);
 
-    public ShiftService(AppDbContext db, IAuditService audit, ISettingsService settings, ILiveUpdateNotifier liveUpdates)
+    public ShiftService(
+        AppDbContext db,
+        IAuditService audit,
+        ISettingsService settings,
+        ILiveUpdateNotifier liveUpdates,
+        IAttendanceAnalyticsCache cache)
     {
         _db = db;
         _audit = audit;
         _settings = settings;
         _liveUpdates = liveUpdates;
+        _cache = cache;
     }
 
     public static string FormatMilitary(TimeOnly time) => time.ToString("HH:mm");
@@ -71,23 +79,27 @@ public class ShiftService : IShiftService
 
     public async Task<IReadOnlyList<ShiftDto>> GetAllAsync(bool includeInactive = false)
     {
-        var query = _db.Shifts.AsNoTracking().AsQueryable();
-        if (!includeInactive) query = query.Where(s => s.IsActive);
+        var key = includeInactive ? "shifts:all" : "shifts:active";
+        return await _cache.GetOrCreateAsync<List<ShiftDto>>(key, ListCacheTtl, async ct =>
+        {
+            var query = _db.Shifts.AsNoTracking().AsQueryable();
+            if (!includeInactive) query = query.Where(s => s.IsActive);
 
-        return await query
-            .OrderBy(s => s.StartTime)
-            .ThenBy(s => s.Name)
-            .Select(s => new ShiftDto(
-                s.Id,
-                s.Name,
-                FormatMilitary(s.StartTime),
-                FormatMilitary(s.EndTime),
-                s.SpansNextDay,
-                BuildDisplayLabel(s.Name, s.StartTime, s.EndTime, s.SpansNextDay),
-                s.IsActive,
-                s.Employees.Count(e => !e.IsDeleted),
-                s.CreatedAt))
-            .ToListAsync();
+            return await query
+                .OrderBy(s => s.StartTime)
+                .ThenBy(s => s.Name)
+                .Select(s => new ShiftDto(
+                    s.Id,
+                    s.Name,
+                    FormatMilitary(s.StartTime),
+                    FormatMilitary(s.EndTime),
+                    s.SpansNextDay,
+                    BuildDisplayLabel(s.Name, s.StartTime, s.EndTime, s.SpansNextDay),
+                    s.IsActive,
+                    s.Employees.Count(e => !e.IsDeleted),
+                    s.CreatedAt))
+                .ToListAsync(ct);
+        });
     }
 
     public async Task<ShiftDto?> GetByIdAsync(int id)

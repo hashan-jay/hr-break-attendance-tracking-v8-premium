@@ -21,16 +21,39 @@ public class DepartmentService : IDepartmentService
     private readonly IAuditService _audit;
     private readonly ISettingsService _settings;
     private readonly ILiveUpdateNotifier _liveUpdates;
+    private readonly IAttendanceAnalyticsCache _cache;
+    private static readonly TimeSpan ListCacheTtl = TimeSpan.FromMinutes(2);
 
-    public DepartmentService(AppDbContext db, IAuditService audit, ISettingsService settings, ILiveUpdateNotifier liveUpdates)
+    public DepartmentService(
+        AppDbContext db,
+        IAuditService audit,
+        ISettingsService settings,
+        ILiveUpdateNotifier liveUpdates,
+        IAttendanceAnalyticsCache cache)
     {
         _db = db;
         _audit = audit;
         _settings = settings;
         _liveUpdates = liveUpdates;
+        _cache = cache;
     }
 
     public async Task<IReadOnlyList<DepartmentDto>> GetAllAsync(bool includeDeleted = false, string? search = null)
+    {
+        if (!string.IsNullOrWhiteSpace(search))
+            return await LoadDepartmentsAsync(includeDeleted, search);
+
+        var key = includeDeleted ? "departments:all" : "departments:active";
+        return await _cache.GetOrCreateAsync<List<DepartmentDto>>(
+            key,
+            ListCacheTtl,
+            ct => LoadDepartmentsAsync(includeDeleted, null, ct));
+    }
+
+    private async Task<List<DepartmentDto>> LoadDepartmentsAsync(
+        bool includeDeleted,
+        string? search,
+        CancellationToken cancellationToken = default)
     {
         var query = _db.Departments.AsNoTracking().AsQueryable();
         if (!includeDeleted) query = query.Where(d => !d.IsDeleted);
@@ -53,7 +76,7 @@ public class DepartmentService : IDepartmentService
                 d.CreatedAt,
                 d.MealBreakStartLimit,
                 d.ComfortBreakStartLimit))
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<DepartmentDto?> GetByIdAsync(int id)

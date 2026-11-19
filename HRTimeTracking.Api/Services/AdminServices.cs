@@ -220,21 +220,27 @@ public class SettingsService : ISettingsService
     private readonly AppDbContext _db;
     private readonly IAuditService _audit;
     private readonly ILiveUpdateNotifier _liveUpdates;
+    private readonly IAttendanceAnalyticsCache _cache;
+    private static readonly TimeSpan ListCacheTtl = TimeSpan.FromMinutes(2);
 
-    public SettingsService(AppDbContext db, IAuditService audit, ILiveUpdateNotifier liveUpdates)
+    public SettingsService(
+        AppDbContext db,
+        IAuditService audit,
+        ILiveUpdateNotifier liveUpdates,
+        IAttendanceAnalyticsCache cache)
     {
         _db = db;
         _audit = audit;
         _liveUpdates = liveUpdates;
+        _cache = cache;
     }
 
     public async Task<IReadOnlyList<SystemSettingDto>> GetAllAsync()
-    {
-        return await _db.SystemSettings.AsNoTracking()
-            .OrderBy(s => s.Key)
-            .Select(s => new SystemSettingDto(s.Id, s.Key, s.Value, s.Description))
-            .ToListAsync();
-    }
+        => await _cache.GetOrCreateAsync<List<SystemSettingDto>>("settings:all", ListCacheTtl, async ct =>
+            await _db.SystemSettings.AsNoTracking()
+                .OrderBy(s => s.Key)
+                .Select(s => new SystemSettingDto(s.Id, s.Key, s.Value, s.Description))
+                .ToListAsync(ct));
 
     public async Task<(bool Ok, string? Error, SystemSettingDto? Data)> UpdateAsync(string key, string value, string? userId)
     {

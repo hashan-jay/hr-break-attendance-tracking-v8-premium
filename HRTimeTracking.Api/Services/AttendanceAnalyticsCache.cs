@@ -13,6 +13,16 @@ public interface IAttendanceAnalyticsCache
     Task BumpGenerationAsync(CancellationToken cancellationToken = default);
     Task<(T? Value, string Provider)?> GetAsync<T>(string key, CancellationToken cancellationToken = default);
     Task<string> SetAsync<T>(string key, T value, TimeSpan ttl, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Read-through cache. A miss loads from the factory, which is the database.
+    /// Generation is part of the key, so a data change stops serving the old value.
+    /// </summary>
+    Task<T> GetOrCreateAsync<T>(
+        string key,
+        TimeSpan ttl,
+        Func<CancellationToken, Task<T>> factory,
+        CancellationToken cancellationToken = default);
 }
 
 /// <summary>
@@ -44,6 +54,7 @@ public sealed class AttendanceAnalyticsCache : IAttendanceAnalyticsCache, IDispo
     private long _generation = 1;
     private int _redisFailures;
     private string _provider = "memory";
+    private DateTime _nextConnectAttemptUtc = DateTime.MinValue;
 
     public AttendanceAnalyticsCache(
         IConfiguration configuration,
@@ -177,6 +188,23 @@ public sealed class AttendanceAnalyticsCache : IAttendanceAnalyticsCache, IDispo
         return provider;
     }
 
+    public async Task<T> GetOrCreateAsync<T>(
+        string key,
+        TimeSpan ttl,
+        Func<CancellationToken, Task<T>> factory,
+        CancellationToken cancellationToken = default)
+    {
+        var generation = await GetGenerationAsync(cancellationToken);
+        var versioned = $"g{generation}:{key}";
+        var hit = await GetAsync<T>(versioned, cancellationToken);
+        if (hit is not null)
+            return hit.Value.Value!;
+
+        var created = await factory(cancellationToken);
+        await SetAsync(versioned, created, ttl, cancellationToken);
+        return created;
+    }
+
     public void Dispose()
     {
         _connectGate.Dispose();
@@ -187,26 +215,38 @@ public sealed class AttendanceAnalyticsCache : IAttendanceAnalyticsCache, IDispo
     {
         if (!_enabled || _options is null) return null;
         if (_redis is { IsConnected: true }) return _redis;
-        if (_redis is not null) return null;
+        if (DateTime.UtcNow < _nextConnectAttemptUtc) return null;
 
         await _connectGate.WaitAsync(cancellationToken);
         try
         {
             if (_redis is { IsConnected: true }) return _redis;
-            if (_redis is not null) return null;
+            if (DateTime.UtcNow < _nextConnectAttemptUtc) return null;
+
+            try
+            {
+                _redis?.Dispose();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogDebug(ex, "Closing a previous Redis connection failed.");
+            }
 
             _redis = await ConnectionMultiplexer.ConnectAsync(_options);
             if (_redis.IsConnected)
             {
-                _logger.LogInformation("Attendance analytics cache connected to Redis.");
+                _nextConnectAttemptUtc = DateTime.MinValue;
+                _logger.LogInformation("Cache connected to Redis.");
                 return _redis;
             }
 
-            _logger.LogWarning("Redis is not reachable. Attendance analytics will use the in-memory cache.");
+            _nextConnectAttemptUtc = DateTime.UtcNow.AddSeconds(30);
+            _logger.LogWarning("Redis is not reachable. Cached reads will use memory until the next retry.");
             return null;
         }
         catch (Exception ex)
         {
+            _nextConnectAttemptUtc = DateTime.UtcNow.AddSeconds(30);
             LogRedisFailure(ex, "connect");
             return _redis is { IsConnected: true } ? _redis : null;
         }
@@ -219,6 +259,6 @@ public sealed class AttendanceAnalyticsCache : IAttendanceAnalyticsCache, IDispo
     private void LogRedisFailure(Exception ex, string action)
     {
         if (Interlocked.Increment(ref _redisFailures) <= 3)
-            _logger.LogWarning(ex, "Redis {Action} failed. Attendance analytics is using the in-memory cache.", action);
+            _logger.LogWarning(ex, "Redis {Action} failed. The request continues from memory or the database.", action);
     }
 }
