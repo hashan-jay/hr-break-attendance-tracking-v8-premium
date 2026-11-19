@@ -9627,9 +9627,9 @@ html[data-theme="dark"] .tz-switch__option:hover {
 
 .theme-toggle.theme-toggle--circle.is-dark {
   background: #161b22;
-  border-color: rgba(255, 255, 255, 0.7);
+  border-color: #14542d;
   color: #fff;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.22), 0 0 10px rgba(255, 255, 255, 0.38);
+  box-shadow: 0 0 0 1px rgba(20, 84, 45, 0.85), 0 0 10px rgba(20, 84, 45, 0.7);
 }
 
 .theme-toggle.theme-toggle--circle:hover,
@@ -9642,9 +9642,9 @@ html[data-theme="dark"] .tz-switch__option:hover {
 .theme-toggle.theme-toggle--circle.is-dark:hover,
 .theme-toggle.theme-toggle--circle.is-dark:focus-visible {
   background: #161b22;
-  border-color: #fff;
+  border-color: #14542d;
   color: #fff;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.45), 0 0 14px rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0 0 1px rgba(20, 84, 45, 0.95), 0 0 14px rgba(20, 84, 45, 0.8);
 }
 
 .portal-shell .theme-toggle:hover {
@@ -9661,10 +9661,10 @@ html[data-theme="dark"] .tz-switch__option:hover {
 
 html[data-theme="dark"] .portal-shell .theme-toggle.theme-toggle--circle:hover,
 html[data-theme="dark"] .portal-shell .theme-toggle.theme-toggle--circle:focus-visible {
-  border-color: #fff;
+  border-color: #14542d;
   background: #161b22;
   color: #fff;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.45), 0 0 14px rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0 0 1px rgba(20, 84, 45, 0.95), 0 0 14px rgba(20, 84, 45, 0.8);
 }
 
 .portal-shell .theme-toggle:focus-visible {
@@ -10585,9 +10585,9 @@ html[data-theme="dark"] .portal-shell .portal-employee-header__actions .theme-to
 
 html[data-theme="dark"] .portal-shell .portal-employee-header__actions .theme-toggle.theme-toggle--circle.is-dark {
   background: #161b22;
-  border-color: rgba(255, 255, 255, 0.7);
+  border-color: #14542d;
   color: #fff;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.22), 0 0 10px rgba(255, 255, 255, 0.38);
+  box-shadow: 0 0 0 1px rgba(20, 84, 45, 0.85), 0 0 10px rgba(20, 84, 45, 0.7);
 }
 
 html[data-theme="dark"] .portal-ig-search__icon {
