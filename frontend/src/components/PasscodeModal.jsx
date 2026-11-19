@@ -49,12 +49,19 @@ function PasscodeEntry({
   tone,
   invalid,
   busy,
+  inputRef,
+  onFilledEnter,
 }) {
-  const inputRef = useRef(null);
+  const localRef = useRef(null);
+  const setInputRef = (node) => {
+    localRef.current = node;
+    if (typeof inputRef === 'function') inputRef(node);
+    else if (inputRef) inputRef.current = node;
+  };
   const [focused, setFocused] = useState(false);
 
   useEffect(() => {
-    if (autoFocus) inputRef.current?.focus();
+    if (autoFocus) localRef.current?.focus();
   }, [autoFocus]);
 
   const handleChange = (event) => {
@@ -73,9 +80,16 @@ function PasscodeEntry({
   };
 
   const handleKeyDown = (event) => {
-    if (event.key !== 'Enter' || value.length === PASSCODE_LENGTH) return;
-    event.preventDefault();
-    onError(`Passcode must be exactly ${PASSCODE_LENGTH} characters.`);
+    if (event.key !== 'Enter') return;
+    if (value.length !== PASSCODE_LENGTH) {
+      event.preventDefault();
+      onError(`Passcode must be exactly ${PASSCODE_LENGTH} characters.`);
+      return;
+    }
+    if (onFilledEnter) {
+      event.preventDefault();
+      onFilledEnter();
+    }
   };
 
   const activeIndex = Math.min(value.length, PASSCODE_LENGTH - 1);
@@ -102,9 +116,9 @@ function PasscodeEntry({
       <div
         className="passcode-slots"
         onMouseDown={(event) => {
-          if (event.target === inputRef.current) return;
+          if (event.target === localRef.current) return;
           event.preventDefault();
-          inputRef.current?.focus();
+          localRef.current?.focus();
         }}
       >
         {Array.from({ length: PASSCODE_LENGTH }, (_, index) => {
@@ -126,7 +140,7 @@ function PasscodeEntry({
           );
         })}
         <input
-          ref={inputRef}
+          ref={setInputRef}
           id={id}
           className="passcode-slots__input"
           type="password"
@@ -171,6 +185,7 @@ export default function PasscodeModal({
   const [shaking, setShaking] = useState(false);
   const [shakeKey, setShakeKey] = useState(0);
   const announcedError = useRef('');
+  const confirmInputRef = useRef(null);
 
   useEffect(() => {
     setPasscode('');
@@ -321,6 +336,7 @@ export default function PasscodeModal({
           tone={tone}
           invalid={Boolean(error)}
           busy={busy}
+          onFilledEnter={isCreate ? () => confirmInputRef.current?.focus() : undefined}
         />
         {isCreate && (
           <PasscodeEntry
@@ -329,6 +345,7 @@ export default function PasscodeModal({
             value={confirmPasscode}
             onChange={setConfirmPasscode}
             onError={setLocalError}
+            inputRef={confirmInputRef}
             revealed={revealed}
             tone={tone}
             invalid={confirmPasscode.length === PASSCODE_LENGTH && confirmPasscode !== passcode}
